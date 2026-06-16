@@ -164,6 +164,7 @@ body::after {
 }
 
 /* Force specific full-width rows */
+.form-group.full-width,
 .form-group:has(.checklist),
 .form-group:has(textarea),
 .form-group:has(.money-bar) {
@@ -180,6 +181,7 @@ label {
 }
 
 .search-input, .money-input, textarea, .check-inline-input {
+  width: 100%;
   background: rgba(0,0,0,0.2);
   border: 1px solid var(--border);
   border-radius: 8px;

@@ -757,7 +757,8 @@ export const officialLocations = [
   "Raton Canyon",
   "School",
   "SAHP",
-  "Mirror Park"
+  "Mirror Park",
+  "TV station"
 ];
 
 export const unofficialLocations = [
@@ -774,16 +775,9 @@ export const unofficialLocations = [
 
 export const allLocations = [...officialLocations, ...unofficialLocations].sort((a, b) => a.localeCompare(b));
 
-export const familyBusinesses = [
-  "Burger shop",
-  "Cowshed",
-  "Freight train",
-  "Plantation",
-  "Oil Well"
-];
 
 export const generalBusinesses = [
-  "Ammunition Store",
+  "Ammunition",
   "ATM",
   "Bar",
   "Car wash",
@@ -811,6 +805,14 @@ export const generalBusinesses = [
   "24/7 Store"
 ];
 
+export const familyBusinesses = [
+  "Burger shop",
+  "Cowshed",
+  "Freight train",
+  "Plantation",
+  "Oil Well"
+];
+
 export const sharesBusinesses = [
   "Taxi fleet shares",
   "Gas station shares",
@@ -820,4 +822,29 @@ export const sharesBusinesses = [
   "Armory store shares",
   "Bar shares",
   "Car sharing shares"
+];
+
+export const workProfessions = [
+  "None",
+  "Trucker",
+  "Lawyer",
+  "DJ",
+  "Photographer",
+  "Bodyguard",
+  "Professional dancer",
+  "Personal driver",
+  "Assistant",
+  "Professional singer",
+  "Firefighter",
+  "Solar panel plantation worker"
+];
+
+export const constructionRoles = [
+  "None",
+  "Construction site",
+  "Locksmith",
+  "Electrician",
+  "Gardener",
+  "Surveyor",
+  "Driver"
 ];

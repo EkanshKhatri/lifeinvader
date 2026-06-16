@@ -108,13 +108,19 @@ const WORK_RULES = `WORK & HIRING:
 - Prefixes: "Hiring [profession/workers]", "[Profession] looking for work.", "Looking for a job."
 - Currency: "Salary: $X." or "Awarding $X bonus." (If no amount, use "Salary: Negotiable." or "Awarding bonuses."). NEVER use "Price:".
 - Construction Sites: Map exactly: site №1 -> "construction site №1 on Vespucci Boulevard.", site №2 -> "construction site №2 on Calais Avenue.", site №3 -> "construction site №3 in Pillbox Hill."
-- Roles & Professions: Trucker, lawyer, DJ, photographer, bodyguard, professional dancer, personal driver, assistant, professional singer, firefighters.
-- Multiple Roles: If an ad mentions more than one role (e.g. locksmith, electrician, gardener, driver), change it to "Hiring workers".
+- Roles & Professions: Trucker, lawyer, DJ, photographer, bodyguard, professional dancer, personal driver, assistant, professional singer, firefighters, locksmith, electrician, gardener, surveyor, driver.
+- Multiple Roles: If an ad mentions more than one construction role (e.g. locksmith, electrician, gardener, driver), change it to "Hiring workers".
+- Terminology: If you see "lumberjack" use "locksmith". "farmer" -> "gardener". "oilman" -> "surveyor". "strippers" or "exotic dancers" -> "professional dancer". "level X" -> "X years of experience".
 - Capitalization: Capitalize the profession ONLY if it's the first word (e.g., "Lawyer looking..."). Otherwise lowercase (e.g., "Hiring a lawyer."). "DJ" is ALWAYS fully capitalized.
-- Renting Work Vehicles: "Renting 15% trucker van. Rent: $12.000 per week." or "Renting out 15% trucker van. Budget: $10.000 per week."
 - EXAMPLES TO STRICTLY FOLLOW:
-  "Hiring workers at construction site №1, in Vespucci Boulevard. Awarding $3.000 bonus."
-  "Hiring a driver with 3 years of experience at construction site №2."
+  "Hiring workers at construction site №1 on Vespucci Boulevard. Salary: Negotiable."
+  "Hiring at construction site №1, in Vespucci Boulevard. Awarding $3.000 bonus."
+  "Hiring a driver with 3 years of experience at construction site №2 on Calais Avenue."
+  "Looking to work as a professional dancer."
+  "Professional dancer looking for work."
+  "Hiring truckers. Salary: Negotiable."
+  "Hiring a lawyer. Salary: Negotiable."
+  "DJ looking for work."
   "Hiring firefighters at the beach market. Salary: $15.000"`;
 
 const OTHER_BASE_RULES = `SERVICES, PARTIES, & OTHER:
@@ -124,7 +130,7 @@ const OTHER_BASE_RULES = `SERVICES, PARTIES, & OTHER:
 - Mining Resources: "copper", "an emerald", "a ruby", "a diamond", "obsidian", "a magma stone".
 - License plates: "license plate (1ABC234)". Custom: "custom license plate".
 - Sound Effects: If exactly 1: "spatial sound effect ([Name])". If multiple: "2 spatial sound effects" (do NOT mention names).
-- Other Item Nouns: "Biospark", "automatic drill/sawmill", "low/medium/high/max quality inventory", "battery", "Christmas key(s)", "Little/Big gift", "GrandPro BodyCam", "hookah", "milk", "pet food", "repair kit", "solar panel", "SIM card №", "Treasure Map", "video card", "wires".
+- Other Item Nouns: "Biospark", "automatic drill/sawmill/rod/oil well/watering can", "low/medium/high/max quality inventory", "battery", "Christmas key(s)", "Little/Big gift", "GrandPro BodyCam", "hookah", "milk", "pet food", "repair kit", "solar panel", "SIM card №", "Treasure Map", "video card", "wires", "sponge".
 
 BEACH MARKET:
 - Format: "Selling [Item] at the beach market shop №X. Price: $X."
@@ -144,21 +150,29 @@ const CLOTHING_RULES = `CLOTHING:
 - Clothing Order: [color] [luminous] [item name] [type] [gender]. Ex: "black luminous Keezy Boost shoes of type 5 for men".`;
 
 const SERVICES_RULES = `SERVICES & PARTIES:
+- Professionals/Services: "Looking for a lawyer.", "Looking for a personal driver.", "Looking for a professional dancer.", "Looking for a professional singer.", "Looking for a DJ."
 - Families & Owners: "Looking for an alliance.", "Looking for a [Business] owner."
 - Poker/Dice: "Looking to play poker/dice." Suffix MUST be "Bet: $X" (not Price). Max bet is $10 Million. If over $10 Million or no bet is given, use "Bet: Negotiable."
-- Parties & Services: "Looking for a party.", "Party at [Location].", "Wedding at Church for [Names] at [Time].", "Car meet at [Location]."`;
+- Parties & Events: "Looking for a party.", "Party at [Location].", "Wedding at Church for [Names] at [Time].", "Car meet at [Location].", "[Brand] exclusive car meet at [Location]."`;
 
 const TICKETS_RULES = `TICKETS:
 - Tickets/Passes: "Grand ticket" (not rp ticket), "regular/rare lottery ticket", "Cayo Perico ticket", "Resource Miners ticket", "Secret ticket fragment", "Prime with 30 days", "Prime Platinum with 15 days".`;
 
 function guessCategory(input) {
   const text = input.toLowerCase();
+  
+  // Explicitly catch Services / Other first
+  if (/\b(party|wedding|meet|alliance|poker|dice)\b/.test(text)) return 'Other';
+  if (/\blooking for (a |an )?(lawyer|personal driver|professional dancer|professional singer|dj|dancer|singer|mechanic|bodyguard|photographer|assistant)\b/.test(text)) return 'Other';
+  if (/\blooking for (a |an )?.*owner\b/.test(text)) return 'Other';
+
   if (/\b(house|apartment|garage|ghetto|vinewood|mirror park|property|renting|rent|garden|w\.h\.|g\.s\.)\b/.test(text)) {
-    if (/\b(party|wedding|meet)\b/.test(text)) return 'Other';
     return 'Real Estate';
   }
   if (/\b(car|vehicle|corvette|truffade|chiron|wheels|engine|transmission|turbo|drift|tuning|rims?|insurance|obey|uber|benefactor|grotti|pegassi|toros)\b/.test(text)) return 'Auto';
+  
   if (/\b(lawyer|mechanic|hiring|work|job|salary|worker|taxi|lumberjack|farmer|dj|locksmith|electrician|gardener|surveyor|driver)\b/.test(text)) return 'Work';
+  
   if (/\b(looking for|wife|husband|family|members|boyfriend|girlfriend|date|valentine|friend)\b/.test(text)) {
     if (/\b(car|vehicle|corvette|truffade|chiron|obey|uber|benefactor|grotti|pegassi)\b/.test(text)) return 'Auto';
     if (/\b(house|apartment|garage)\b/.test(text)) return 'Real Estate';
@@ -276,6 +290,12 @@ export async function formatAd(input, manualCategory = 'Auto-Detect') {
   cleanedInput = cleanedInput.replace(/\bscarf\b/gi, 'mask');
   cleanedInput = cleanedInput.replace(/\bunique (\d+) rims\b/gi, 'luminous wheels of type $1');
   cleanedInput = cleanedInput.replace(/\b(looking to buy|looking to purchase)\b/gi, 'Buying');
+  
+  // Work Translations
+  cleanedInput = cleanedInput.replace(/\b(lumberjack|lumberjacks)\b/gi, 'locksmith');
+  cleanedInput = cleanedInput.replace(/\b(farmer|farmers)\b/gi, 'gardener');
+  cleanedInput = cleanedInput.replace(/\b(oilman|oilmen)\b/gi, 'surveyor');
+  cleanedInput = cleanedInput.replace(/\b(exotic dancers|stripers|strippers|exotic dancer|stripper)\b/gi, 'professional dancer');
 
   // Pure JS Optimization: Check Blacklisted cars instantly to avoid hitting API
   const isBuyingOrSelling = /\b(buy|buying|sell|selling|trade|trading)\b/i.test(cleanedInput);

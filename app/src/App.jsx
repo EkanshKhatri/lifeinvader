@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { formatAd } from './utils/formatter';
-import { carsList, allLocations, officialLocations, unofficialLocations, familyBusinesses, generalBusinesses, sharesBusinesses } from './data';
+import { carsList, allLocations, officialLocations, unofficialLocations, familyBusinesses, generalBusinesses, sharesBusinesses, workProfessions, constructionRoles } from './data';
 import './index.css';
 
 function App() {
@@ -59,6 +59,16 @@ function App() {
   const [businessModifier, setBusinessModifier] = useState('Standard'); // Standard, Shares, Control
   const [cropType, setCropType] = useState('');
   const [plantationBeds, setPlantationBeds] = useState('');
+  const [sharesQuantity, setSharesQuantity] = useState('');
+
+  // Work State
+  const [workAction, setWorkAction] = useState('Hiring'); // Hiring, Looking, Renting, Renting out
+  const [workProfession, setWorkProfession] = useState('None');
+  const [workExperience, setWorkExperience] = useState('');
+  const [constructionSiteNum, setConstructionSiteNum] = useState('None');
+  const [truckerVanPercent, setTruckerVanPercent] = useState('15');
+
+  const [workIsPlural, setWorkIsPlural] = useState(false);
 
   const categories = ['Auto-Detect', 'Auto', 'Real Estate', 'Business', 'Work', 'Dating', 'Other'];
 
@@ -167,7 +177,7 @@ function App() {
       if (officialLocations.includes(formLocation)) {
         locStr = ` ${locPrefix} ${formLocation}`;
       } else {
-        locStr = ` ${locPrefix} the ${formLocation.toLowerCase()}`;
+        locStr = ` ${locPrefix} the ${formLocation}`;
       }
     }
 
@@ -304,17 +314,19 @@ function App() {
     }
 
     let locStr = '';
-    if (formLocation) {
+    let hideLocation = businessCategory === 'General' && (businessModifier === 'Shares' || businessModifier === 'Control');
+    if (formLocation && !hideLocation) {
       if (officialLocations.includes(formLocation)) {
         locStr = ` ${locPrefix} ${formLocation}`;
       } else {
-        locStr = ` ${locPrefix} the ${formLocation.toLowerCase()}`;
+        locStr = ` ${locPrefix} the ${formLocation}`;
       }
     }
 
     let objStr = '';
     if (businessModifier === 'Shares') {
-       objStr = selectedBusiness !== 'None' ? selectedBusiness : 'business shares';
+       let baseName = selectedBusiness !== 'None' ? selectedBusiness : 'business shares';
+       objStr = sharesQuantity.trim() ? `${sharesQuantity.trim()} ${baseName}` : baseName;
     } else {
        if (selectedBusiness === 'Plantation') {
           let crop = cropType.trim() ? (cropType.charAt(0).toUpperCase() + cropType.slice(1).toLowerCase() + ' p') : 'P';
@@ -325,7 +337,7 @@ function App() {
        } else if (selectedBusiness !== 'None') {
           let busName = selectedBusiness === 'Drug lab' ? 'Burger shop' : selectedBusiness;
           
-          if (formBusNum) {
+          if (formBusNum && selectedBusiness !== 'Cowshed') {
             objStr = `${busName} №${formBusNum}`;
           } else {
             objStr = `${busName} business`;
@@ -349,34 +361,175 @@ function App() {
       ad = `Selling ${objStr}${locStr}. Price: ${priceStr}.`;
     } else if (formAction === 'Trade') {
       ad = `Trading ${objStr}${locStr}.`;
+    } else if (formAction === 'SellOrTrade') {
+      ad = `Selling or trading ${objStr}${locStr}. Price: ${priceStr}.`;
     } else {
       ad = `Selling ${objStr}${locStr}. Price: ${priceStr}.`;
     }
     return ad;
   };
 
+  const generateWorkAd = () => {
+    let priceStr = 'Negotiable';
+    let cleanNum = parseFloat(formMoney.replace(/,/g, '.'));
+    if (!isNegotiable && !isNaN(cleanNum)) {
+      if (formMoneyUnit === 'Million') {
+        priceStr = '$' + cleanNum + ' Million';
+      } else {
+        if (cleanNum >= 1000000) {
+          priceStr = '$' + (cleanNum / 1000000) + ' Million';
+        } else {
+          priceStr = '$' + cleanNum.toLocaleString('de-DE');
+        }
+      }
+    }
+
+    let expStr = (workExperience && (workProfession === 'Trucker' || constructionRoles.includes(workProfession))) ? ` with ${workExperience} years of experience` : '';
+
+    let prof = workProfession === 'None' ? '' : workProfession;
+    let isVowel = prof && /^[AEIOU]/i.test(prof);
+    let article = isVowel ? 'an' : 'a';
+    
+
+
+    let isConstruction = constructionRoles.includes(prof);
+    if (prof === 'Construction site' && workAction === 'Hiring') prof = ''; 
+
+    let locStr = '';
+    let currentLocPrefix = prof === 'Firefighter' ? 'at' : locPrefix;
+    const noLocationProfs = ['Trucker', 'Lawyer', 'Personal driver', 'Assistant', 'Solar panel plantation worker'];
+
+    if (formLocation && !noLocationProfs.includes(prof) && !isConstruction) {
+      if (officialLocations.includes(formLocation)) {
+        locStr = ` ${currentLocPrefix} ${formLocation}`;
+      } else {
+        locStr = ` ${currentLocPrefix} the ${formLocation}`;
+      }
+    }
+
+    if (workAction === 'Looking') {
+      if (isConstruction) {
+        let siteStr = constructionSiteNum !== 'None' ? ` at construction site №${constructionSiteNum}` : ` at the construction site`;
+        if (prof === 'Construction site') {
+           return `Looking for a job${siteStr}.`;
+        } else if (prof === '') {
+           return `Looking for a job.`;
+        } else {
+           return `Looking to work as a ${prof.toLowerCase()}${siteStr}.`;
+        }
+      }
+      
+      if (prof === '') {
+         return `Looking for a job.`;
+      } else if (prof === 'Solar panel plantation worker') {
+         return `Looking for solar panel plantation work.`;
+      } else if (prof === 'Professional dancer') {
+         return `Looking to work as a professional dancer.`;
+      } else {
+         let p = prof === 'DJ' ? 'DJ' : prof.charAt(0).toUpperCase() + prof.slice(1).toLowerCase();
+         return `${p}${expStr} looking for work.`;
+      }
+    }
+
+    let targetStr = '';
+    let pLow = prof === 'DJ' ? 'DJ' : prof.toLowerCase();
+
+    let pluralMap = {
+      'Trucker': 'truckers',
+      'Lawyer': 'lawyers',
+      'DJ': 'DJs',
+      'Photographer': 'photographers',
+      'Bodyguard': 'bodyguards',
+      'Professional dancer': 'professional dancers',
+      'Personal driver': 'personal drivers',
+      'Assistant': 'assistants',
+      'Professional singer': 'professional singers',
+      'Locksmith': 'locksmiths',
+      'Electrician': 'electricians',
+      'Gardener': 'gardeners',
+      'Surveyor': 'surveyors',
+      'Driver': 'drivers'
+    };
+    let pluralWord = pluralMap[prof] || prof.toLowerCase() + 's';
+
+    if (prof === 'Firefighter') {
+       targetStr = `firefighters${locStr}`;
+    } else if (prof === 'Solar panel plantation worker') {
+       targetStr = `workers for solar panel plantations${locStr}`;
+    } else if (isConstruction) {
+       if (prof === '') {
+           targetStr = `workers at construction site`;
+           if (constructionSiteNum !== 'None') targetStr += ` №${constructionSiteNum}`;
+           targetStr += locStr;
+       } else {
+          if (workIsPlural && !constructionRoles.includes(workProfession) && !expStr) {
+             targetStr = `${pluralWord} at construction site`;
+          } else {
+             targetStr = `${article} ${pLow}${expStr} at construction site`;
+          }
+          if (constructionSiteNum !== 'None') targetStr += ` №${constructionSiteNum}`;
+          targetStr += locStr;
+       }
+    } else {
+       if (prof === '') {
+         targetStr = `workers${locStr}`; 
+       } else {
+         if (workIsPlural && !expStr) {
+           targetStr = `${pluralWord}${locStr}`;
+         } else {
+           targetStr = `${article} ${pLow}${expStr}${locStr}`;
+         }
+       }
+    }
+
+    let finalStr = `Hiring ${targetStr}.`;
+    
+       if (prof === '' && isConstruction && priceStr === 'Negotiable' && !formMoney.trim()) {
+          return finalStr + ` Salary: Negotiable.`;
+       }
+       return finalStr + ` Salary: ${priceStr}.`;
+  };
+
+  const applyDigitRule = (text) => {
+    if (!text) return text;
+    let trimmed = text.trim();
+    if (trimmed.endsWith('.')) {
+      if (/\d$/.test(trimmed.slice(0, -1))) {
+        return trimmed.slice(0, -1);
+      }
+    }
+    return trimmed;
+  };
+
   useEffect(() => {
+    let rawOutput = '';
     if (manualCategory === 'Auto') {
-      setOutput(generateAutoAd());
+      rawOutput = generateAutoAd();
       setCategory('Auto');
     } else if (manualCategory === 'Real Estate') {
-      setOutput(generateRealEstateAd());
+      rawOutput = generateRealEstateAd();
       setCategory('Real Estate');
     } else if (manualCategory === 'Business') {
-      setOutput(generateBusinessAd());
+      rawOutput = generateBusinessAd();
       setCategory('Business');
+    } else if (manualCategory === 'Work') {
+      rawOutput = generateWorkAd();
+      setCategory('Work');
     } else if (manualCategory === 'Auto-Detect') {
       if (input.trim() === '') {
-        setOutput('');
         setCategory('');
       }
     } else {
-      if (input.trim() === '') {
-        setOutput('');
-      } else {
-        setOutput(`${manualCategory} | ${input}`);
+      if (input.trim() !== '') {
+        rawOutput = `${manualCategory} | ${input}`;
       }
       setCategory(manualCategory);
+    }
+    
+    if (manualCategory !== 'Auto-Detect') {
+      setOutput(applyDigitRule(rawOutput));
+    } else if (input.trim() === '') {
+      setOutput('');
     }
   }, [
     input, manualCategory, 
@@ -384,8 +537,11 @@ function App() {
     configLevel, hasVisuals, hasWheels, wheelType, hasInsurance, hasTurbo, hasDrift,
     propertyType, apartmentComplex, formHouseNum, houseQuantity, formLocation, locPrefix, hasGarden, garageSpaces, warehouses, customInterior,
     hasHelipad, hasPool, hasTennis, driveway, spaciousBackyard, views,
-    businessCategory, selectedBusiness, formBusNum, businessModifier, cropType, plantationBeds
+    hasHelipad, hasPool, hasTennis, driveway, spaciousBackyard, views,
+    businessCategory, selectedBusiness, formBusNum, businessModifier, cropType, plantationBeds, sharesQuantity,
+    workAction, workProfession, workExperience, constructionSiteNum, truckerVanPercent, workIsPlural
   ]);
+
 
   const handleFormat = async () => {
     if (!input.trim() || manualCategory !== 'Auto-Detect') return;
@@ -393,7 +549,7 @@ function App() {
     setLoading(true);
     try {
       const result = await formatAd(input);
-      setOutput(result.formattedAd);
+      setOutput(applyDigitRule(result.formattedAd));
       setCategory(result.category);
     } catch (error) {
       console.error(error);
@@ -411,57 +567,57 @@ function App() {
   };
 
   const handleReset = () => {
-    if (manualCategory === 'Auto') {
-      setFormAction('Buy');
-      setFormCar1('');
-      setFormCar2('');
-      setFormMoney('');
-      setFormMoneyUnit('None');
-      setIsNegotiable(false);
-      setConfigLevel('none');
-      setHasVisuals(false);
-      setHasWheels(false);
-      setWheelType('');
-      setHasInsurance(false);
-      setHasTurbo(false);
-      setHasDrift(false);
-    } else if (manualCategory === 'Real Estate') {
-      setFormAction('Buy');
-      setPropertyType('House');
-      setApartmentComplex('None');
-      setFormHouseNum('');
-      setHouseQuantity(1);
-      setFormLocation('');
-      setLocPrefix('in');
-      setFormMoney('');
-      setFormMoneyUnit('None');
-      setIsNegotiable(false);
-      setHasGarden(false);
-      setGarageSpaces('None');
-      setWarehouses('None');
-      setCustomInterior(false);
-      setHasHelipad(false);
-      setHasPool(false);
-      setHasTennis(false);
-      setDriveway('None');
-      setSpaciousBackyard(false);
-      setViews('None');
-    } else if (manualCategory === 'Business') {
-      setFormAction('Buy');
-      setBusinessCategory('General');
-      setSelectedBusiness('None');
-      setFormBusNum('');
-      setBusinessModifier('Standard');
-      setCropType('');
-      setPlantationBeds('');
-      setFormLocation('');
-      setLocPrefix('in');
-      setFormMoney('');
-      setFormMoneyUnit('None');
-      setIsNegotiable(false);
-    } else {
-      setInput('');
-    }
+    // Auto
+    setFormCar1('');
+    setFormCar2('');
+    setConfigLevel('none');
+    setHasVisuals(false);
+    setHasWheels(false);
+    setWheelType('');
+    setHasInsurance(false);
+    setHasTurbo(false);
+    setHasDrift(false);
+
+    // Real Estate
+    setPropertyType('House');
+    setApartmentComplex('None');
+    setFormHouseNum('');
+    setHouseQuantity(1);
+    setHasGarden(false);
+    setGarageSpaces('None');
+    setWarehouses('None');
+    setCustomInterior(false);
+    setHasHelipad(false);
+    setHasPool(false);
+    setHasTennis(false);
+    setDriveway('None');
+    setSpaciousBackyard(false);
+    setViews('None');
+
+    // Business
+    setBusinessCategory('General');
+    setSelectedBusiness('None');
+    setFormBusNum('');
+    setBusinessModifier('Standard');
+    setCropType('');
+    setPlantationBeds('');
+
+    // Work
+    setWorkAction('Hiring');
+    setWorkProfession('None');
+    setWorkExperience('');
+    setConstructionSiteNum('None');
+    setWorkIsPlural(false);
+
+    // Global
+    setFormAction('Buy');
+    setFormLocation('');
+    setLocPrefix('in');
+    setFormMoney('');
+    setFormMoneyUnit('None');
+    setIsNegotiable(false);
+    setInput('');
+    setOutput('');
     setCopied(false);
   };
 
@@ -482,10 +638,7 @@ function App() {
               className={`cat-btn ${manualCategory === cat ? 'active' : ''}`}
               onClick={() => {
                 setManualCategory(cat);
-                if (cat === 'Auto' || cat === 'Real Estate' || cat === 'Business') {
-                  setFormAction('Buy');
-                  setInput('');
-                }
+                handleReset();
               }}
             >
               {cat}
@@ -855,8 +1008,11 @@ function App() {
               <div className="action-toggles">
                 <button className={`action-btn ${formAction === 'Buy' ? 'active' : ''}`} onClick={() => setFormAction('Buy')}>🛒 Buy</button>
                 <button className={`action-btn ${formAction === 'Sell' ? 'active' : ''}`} onClick={() => setFormAction('Sell')}>💰 Sell</button>
-                {businessCategory === 'General' && (
-                  <button className={`action-btn ${formAction === 'Trade' ? 'active' : ''}`} onClick={() => setFormAction('Trade')}>🔄 Trade</button>
+                {businessCategory === 'General' && businessModifier === 'Standard' && (
+                  <>
+                    <button className={`action-btn ${formAction === 'Trade' ? 'active' : ''}`} onClick={() => setFormAction('Trade')}>🔄 Trade</button>
+                    <button className={`action-btn ${formAction === 'SellOrTrade' ? 'active' : ''}`} onClick={() => setFormAction('SellOrTrade')}>🤝 Sell or Trade</button>
+                  </>
                 )}
               </div>
             </div>
@@ -868,7 +1024,7 @@ function App() {
                   <select value={businessCategory} onChange={(e) => {
                     setBusinessCategory(e.target.value);
                     setSelectedBusiness('None');
-                    if (e.target.value === 'Family' && formAction === 'Trade') {
+                    if (e.target.value === 'Family' && (formAction === 'Trade' || formAction === 'SellOrTrade')) {
                       setFormAction('Buy');
                     }
                   }} className="search-input">
@@ -882,6 +1038,9 @@ function App() {
                     <select value={businessModifier} onChange={(e) => {
                       setBusinessModifier(e.target.value);
                       setSelectedBusiness('None');
+                      if ((e.target.value === 'Shares' || e.target.value === 'Control') && (formAction === 'Trade' || formAction === 'SellOrTrade')) {
+                        setFormAction('Buy');
+                      }
                     }} className="search-input">
                       <option value="Standard">Standard</option>
                       <option value="Shares">Shares</option>
@@ -892,7 +1051,22 @@ function App() {
               </div>
             </div>
 
-            {businessModifier !== 'Shares' && (
+            {businessModifier === 'Shares' && businessCategory === 'General' && (
+              <div className="form-group">
+                <label>Shares Quantity</label>
+                <div className="search-container">
+                  <input 
+                    type="text" 
+                    className="search-input"
+                    placeholder="e.g. 5"
+                    value={sharesQuantity}
+                    onChange={(e) => setSharesQuantity(e.target.value.replace(/\D/g, ''))}
+                  />
+                </div>
+              </div>
+            )}
+
+            {businessModifier !== 'Shares' && selectedBusiness !== 'Plantation' && selectedBusiness !== 'Cowshed' && (
               <div className="form-group">
                 <label>Business Number</label>
                 <div className="search-container">
@@ -934,69 +1108,81 @@ function App() {
             {selectedBusiness === 'Plantation' && (
               <div className="form-group">
                 <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-                  <div style={{ flex: '1 1 150px' }}>
+                  <div style={{ flex: '1 1 200px' }}>
                     <label>Crop Type</label>
-                    <input 
-                      type="text" 
-                      className="search-input"
-                      placeholder="e.g. Cabbage"
-                      value={cropType}
-                      onChange={(e) => setCropType(e.target.value)}
-                    />
+                    <div className="checklist" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(100px, 1fr))', maxHeight: '150px', overflowY: 'auto' }}>
+                      <label className="check-item">
+                        <input type="radio" checked={cropType === ''} onChange={() => setCropType('')} />
+                        None
+                      </label>
+                      {['Pumpkin', 'Cabbage', 'Mandarin', 'Pineapple'].map(crop => (
+                        <label key={crop} className="check-item">
+                          <input type="radio" checked={cropType === crop} onChange={() => setCropType(crop)} />
+                          {crop}
+                        </label>
+                      ))}
+                    </div>
                   </div>
-                  <div style={{ flex: '1 1 150px' }}>
+                  <div style={{ flex: '1 1 200px' }}>
                     <label>Beds</label>
-                    <input 
-                      type="text" 
-                      className="search-input"
-                      placeholder="e.g. 20"
-                      value={plantationBeds}
-                      onChange={(e) => setPlantationBeds(e.target.value.replace(/\D/g, ''))}
-                    />
+                    <div className="checklist" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(80px, 1fr))', maxHeight: '150px', overflowY: 'auto' }}>
+                      <label className="check-item">
+                        <input type="radio" checked={plantationBeds === ''} onChange={() => setPlantationBeds('')} />
+                        None
+                      </label>
+                      {['5', '10', '15', '20'].map(beds => (
+                        <label key={beds} className="check-item">
+                          <input type="radio" checked={plantationBeds === beds} onChange={() => setPlantationBeds(beds)} />
+                          {beds}
+                        </label>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
             )}
 
-            <div className="form-group">
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-                <label style={{ margin: 0 }}>Location</label>
-                <label style={{display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.8rem', color: 'var(--text-muted)'}}>
-                  Prefix:
-                  <select value={locPrefix} onChange={(e) => setLocPrefix(e.target.value)} className="check-inline-input" style={{width: 'auto', padding: '0.2rem 0.5rem', margin: 0}}>
-                    <option value="in">in</option>
-                    <option value="near">near</option>
-                  </select>
-                </label>
-              </div>
-              <div className="search-container" style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
-                <div className="checklist" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', maxHeight: '250px', overflowY: 'auto', padding: '1.2rem', marginTop: 0, alignContent: 'start' }}>
-                  <div style={{ gridColumn: '1 / -1', fontSize: '0.85rem', fontWeight: 'bold', color: 'var(--primary)', marginBottom: '0.5rem' }}>Official Locations</div>
-                  {[...officialLocations].sort((a, b) => a.localeCompare(b)).map(loc => (
-                    <label key={loc} className="check-item">
-                      <input 
-                        type="checkbox" 
-                        checked={formLocation === loc} 
-                        onChange={() => setFormLocation(formLocation === loc ? '' : loc)} 
-                      /> 
-                      <span style={{ fontSize: '0.85rem' }}>{loc}</span>
-                    </label>
-                  ))}
+            {!(businessCategory === 'General' && (businessModifier === 'Shares' || businessModifier === 'Control')) && (
+              <div className="form-group">
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+                  <label style={{ margin: 0 }}>Location</label>
+                  <label style={{display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.8rem', color: 'var(--text-muted)'}}>
+                    Prefix:
+                    <select value={locPrefix} onChange={(e) => setLocPrefix(e.target.value)} className="check-inline-input" style={{width: 'auto', padding: '0.2rem 0.5rem', margin: 0}}>
+                      <option value="in">in</option>
+                      <option value="near">near</option>
+                    </select>
+                  </label>
+                </div>
+                <div className="search-container" style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
+                  <div className="checklist" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', maxHeight: '250px', overflowY: 'auto', padding: '1.2rem', marginTop: 0, alignContent: 'start' }}>
+                    <div style={{ gridColumn: '1 / -1', fontSize: '0.85rem', fontWeight: 'bold', color: 'var(--primary)', marginBottom: '0.5rem' }}>Official Locations</div>
+                    {[...officialLocations].sort((a, b) => a.localeCompare(b)).map(loc => (
+                      <label key={loc} className="check-item">
+                        <input 
+                          type="checkbox" 
+                          checked={formLocation === loc} 
+                          onChange={() => setFormLocation(formLocation === loc ? '' : loc)} 
+                        /> 
+                        <span style={{ fontSize: '0.85rem' }}>{loc}</span>
+                      </label>
+                    ))}
 
-                  <div style={{ gridColumn: '1 / -1', fontSize: '0.85rem', fontWeight: 'bold', color: 'var(--primary)', marginTop: '1rem', marginBottom: '0.5rem' }}>Unofficial Locations</div>
-                  {[...unofficialLocations].sort((a, b) => a.localeCompare(b)).map(loc => (
-                    <label key={loc} className="check-item">
-                      <input 
-                        type="checkbox" 
-                        checked={formLocation === loc} 
-                        onChange={() => setFormLocation(formLocation === loc ? '' : loc)} 
-                      /> 
-                      <span style={{ fontSize: '0.85rem' }}>{loc}</span>
-                    </label>
-                  ))}
+                    <div style={{ gridColumn: '1 / -1', fontSize: '0.85rem', fontWeight: 'bold', color: 'var(--primary)', marginTop: '1rem', marginBottom: '0.5rem' }}>Unofficial Locations</div>
+                    {[...unofficialLocations].sort((a, b) => a.localeCompare(b)).map(loc => (
+                      <label key={loc} className="check-item">
+                        <input 
+                          type="checkbox" 
+                          checked={formLocation === loc} 
+                          onChange={() => setFormLocation(formLocation === loc ? '' : loc)} 
+                        /> 
+                        <span style={{ fontSize: '0.85rem' }}>{loc}</span>
+                      </label>
+                    ))}
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
 
             <div className="form-group">
               <label>Budget / Price</label>
@@ -1027,7 +1213,163 @@ function App() {
           </div>
         )}
 
-        {manualCategory !== 'Auto' && manualCategory !== 'Real Estate' && manualCategory !== 'Business' && (
+        {manualCategory === 'Work' && (
+          <div className="form-builder">
+            <div className="form-group">
+              <label>Action</label>
+              <div className="action-toggles">
+                <button className={`action-btn ${workAction === 'Hiring' ? 'active' : ''}`} onClick={() => setWorkAction('Hiring')}>💼 Hiring</button>
+                <button className={`action-btn ${workAction === 'Looking' ? 'active' : ''}`} onClick={() => setWorkAction('Looking')}>🔍 Looking</button>
+              </div>
+            </div>
+
+            <div className="form-group">
+              <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+                <div style={{ flex: '1 1 200px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <label>Profession / Role</label>
+                    {workAction === 'Hiring' && workProfession !== 'None' && workProfession !== 'Construction site' && workProfession !== 'Firefighter' && workProfession !== 'Solar panel plantation worker' && !constructionRoles.includes(workProfession) && (
+                      <label className="check-item check-inline" style={{ padding: 0, margin: 0, fontSize: '0.75rem', fontWeight: 600 }}>
+                        <input type="checkbox" checked={workIsPlural} onChange={(e) => setWorkIsPlural(e.target.checked)} />
+                        Multiple (Plural)
+                      </label>
+                    )}
+                  </div>
+                  <select 
+                    className="search-input"
+                    value={workProfession} 
+                    onChange={(e) => setWorkProfession(e.target.value)}
+                  >
+                    <optgroup label="General Roles">
+                      {workProfessions.map(prof => (
+                        <option key={prof} value={prof}>{prof}</option>
+                      ))}
+                    </optgroup>
+                    <optgroup label="Construction Roles">
+                      {constructionRoles.filter(r => r !== 'None').map(prof => (
+                        <option key={prof} value={prof}>
+                          {prof === 'Construction site' && workAction === 'Hiring' ? 'Workers' : prof}
+                        </option>
+                      ))}
+                    </optgroup>
+                  </select>
+                </div>
+                
+                {(constructionRoles.includes(workProfession) || workProfession === 'None' || workProfession === 'Construction site') && !(workAction === 'Looking' && workProfession === 'None') && (
+                  <div style={{ flex: '1 1 200px' }}>
+                    <label>Construction Site №</label>
+                    <select 
+                      className="search-input"
+                      value={constructionSiteNum} 
+                      onChange={(e) => setConstructionSiteNum(e.target.value)}
+                    >
+                      {['None', '1', '2', '3'].map(site => (
+                        <option key={site} value={site}>{site}</option>
+                      ))}
+                    </select>
+                  </div>
+                )}
+              </div>
+            </div>
+
+
+            {(workProfession === 'Trucker' || constructionRoles.includes(workProfession)) && !(workAction === 'Looking' && workProfession === 'None') && (
+              <div className="form-group">
+                <label>Years of Experience</label>
+                <div className="search-container">
+                  <input 
+                    type="text" 
+                    className="search-input"
+                    placeholder="e.g. 3"
+                    value={workExperience}
+                    onChange={(e) => setWorkExperience(e.target.value.replace(/\D/g, ''))}
+                  />
+                </div>
+              </div>
+            )}
+
+            {workAction !== 'Looking' && constructionSiteNum === 'None' && !['Trucker', 'Lawyer', 'Personal driver', 'Assistant', 'Solar panel plantation worker'].includes(workProfession) && !constructionRoles.includes(workProfession) && (
+              <div className="form-group">
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+                <label style={{ margin: 0 }}>Location</label>
+                <label style={{display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.8rem', color: 'var(--text-muted)'}}>
+                  Prefix:
+                  {workProfession === 'Firefighter' ? (
+                    <span style={{ fontWeight: 'bold' }}>at</span>
+                  ) : (
+                    <select value={locPrefix} onChange={(e) => setLocPrefix(e.target.value)} className="check-inline-input" style={{width: 'auto', padding: '0.2rem 0.5rem', margin: 0}}>
+                      <option value="in">in</option>
+                      <option value="near">near</option>
+                      <option value="on">on</option>
+                    </select>
+                  )}
+                </label>
+              </div>
+              <div className="search-container" style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
+                <div className="checklist" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', maxHeight: '250px', overflowY: 'auto', padding: '1.2rem', marginTop: 0, alignContent: 'start' }}>
+                  <div style={{ gridColumn: '1 / -1', fontSize: '0.85rem', fontWeight: 'bold', color: 'var(--primary)', marginBottom: '0.5rem' }}>Official Locations</div>
+                  {[...officialLocations].sort((a, b) => a.localeCompare(b)).map(loc => (
+                    <label key={loc} className="check-item">
+                      <input 
+                        type="checkbox" 
+                        checked={formLocation === loc} 
+                        onChange={() => setFormLocation(formLocation === loc ? '' : loc)} 
+                      /> 
+                      <span style={{ fontSize: '0.85rem' }}>{loc}</span>
+                    </label>
+                  ))}
+
+                  <div style={{ gridColumn: '1 / -1', fontSize: '0.85rem', fontWeight: 'bold', color: 'var(--primary)', marginTop: '1rem', marginBottom: '0.5rem' }}>Unofficial Locations</div>
+                  {[...unofficialLocations].sort((a, b) => a.localeCompare(b)).map(loc => (
+                    <label key={loc} className="check-item">
+                      <input 
+                        type="checkbox" 
+                        checked={formLocation === loc} 
+                        onChange={() => setFormLocation(formLocation === loc ? '' : loc)} 
+                      /> 
+                      <span style={{ fontSize: '0.85rem' }}>{loc}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+            </div>
+            )}
+
+            {workAction !== 'Looking' && (
+              <div className="form-group">
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+                <label style={{ margin: 0 }}>Salary</label>
+              </div>
+
+              <div className="money-bar">
+                <input 
+                  type="text" 
+                  className="money-input"
+                  placeholder={isNegotiable ? "Negotiable" : "Amount (e.g. 15.000)"}
+                  value={formMoney}
+                  onChange={(e) => setFormMoney(e.target.value)}
+                  disabled={isNegotiable}
+                />
+                <button 
+                  className={`money-btn ${formMoneyUnit === 'Million' ? 'active' : ''}`}
+                  onClick={() => setFormMoneyUnit(prev => prev === 'Million' ? 'None' : 'Million')}
+                  disabled={isNegotiable}
+                >
+                  Million
+                </button>
+                <button 
+                  className={`money-btn ${isNegotiable ? 'active' : ''}`}
+                  onClick={() => setIsNegotiable(!isNegotiable)}
+                >
+                  Negotiable
+                </button>
+              </div>
+            </div>
+            )}
+          </div>
+        )}
+
+        {manualCategory !== 'Auto' && manualCategory !== 'Real Estate' && manualCategory !== 'Business' && manualCategory !== 'Work' && (
           <div className="input-section">
             <div className="form-group">
               <label>Raw Player Advertisement</label>
