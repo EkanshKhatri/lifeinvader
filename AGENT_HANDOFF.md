@@ -44,6 +44,16 @@ The application relies heavily on specific grammatical rules requested by the us
 ### D. Global Price Rules
 - **The $500M Cap:** Across the board (specifically implemented in the Business logic), if a price is evaluated to be greater than $500,000,000, the output string MUST automatically replace the price with `"Negotiable"`.
 
+### E. Work Rules
+- **Construction Roles vs General Roles:** Work professions are split into General Roles and Construction Roles. Construction roles (and 'Trucker') unlock additional UI fields like "Construction Site №" and "Years of Experience".
+- **Dynamic Naming:** The 'Construction site' option automatically renders as 'Workers' in the UI when the action is set to 'Hiring', but its underlying value remains 'Construction site'.
+- **Location Overrides:** Selecting 'Firefighter' automatically locks the location prefix to `at`. Certain roles (Trucker, Lawyer, Personal driver, Assistant, Solar panel plantation worker) have their location UI completely hidden, and location formatting is ignored.
+- **Looking vs Hiring:** If the action is "Looking", the Salary block is hidden completely and omitted from generation. If "Looking for a job" is selected with "None" for profession, Construction Site No and Experience are hidden.
+
+### F. Global Formatting Rules
+- **Digit Period Rule:** A global formatting function (`applyDigitRule`) runs on every single generated ad right before output. If the ad ends in a period `.`, and the character immediately before it is a digit (e.g., `$200.000.` or `№1.`), the period is stripped automatically. If it ends in a word, the period is kept.
+- **Category Switching Reset:** Whenever a user switches between categories (e.g., from Auto to Work), ALL form states across all categories are instantly reset to their defaults to ensure a clean slate.
+
 ## 4. How to Continue Work
 When you take over, simply read the user's prompt. All modifications to the UI should remain compact to match the `index.css` design philosophy. If adding new categories (like Dating or Work), follow the exact same state-driven architecture found in `App.jsx`.
 
