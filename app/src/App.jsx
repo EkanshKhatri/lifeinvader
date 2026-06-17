@@ -2015,7 +2015,15 @@ function App() {
                       <label htmlFor="eachCheck" style={{ marginBottom: 0 }}>Each</label>
                     </div>
                   )}
-                  {(otherItem2.trim() !== '' || otherItem3.trim() !== '') && (
+                  {(() => {
+                    const iCount = [otherItem1, otherItem2, otherItem3].filter(i => i.trim() !== '').length;
+                    const pCount = [
+                      otherItem1.trim() !== '' && otherPrice1.trim() !== '',
+                      otherItem2.trim() !== '' && otherPrice2.trim() !== '',
+                      otherItem3.trim() !== '' && otherPrice3.trim() !== ''
+                    ].filter(Boolean).length;
+                    return iCount > 1 && pCount === iCount;
+                  })() && (
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                       <input 
                         type="checkbox" 
