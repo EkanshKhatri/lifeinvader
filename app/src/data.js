@@ -945,7 +945,7 @@ export const otherItemsList = [
   "Progen container", "Maserati container", "Benefactor container", "gardener container", "rare love container",
   "regular love container", "Renault container", "resources container", "diver container", "organization container",
   "sphere of influence container", "wheels 1 container", "wheels 2 container", "wheels 3 container",
-  "level 1 lockpick", "level 2 lockpick", "level 3 lockpick", "lockpicks",
+
   "engine tuning", "transmission tuning", "suspension tuning", "brakes tuning", "tires tuning", "luminous wheels",
   "old autumn gold container", "old summer gold container", "old winter gold container", "School container",
   "arena container", "daily container", "Halloween container", "womens gift container of type 1",
