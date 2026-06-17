@@ -634,6 +634,8 @@ function App() {
          }
          
          if (q === '1') {
+             const isClothing = clothingItems.some(c => c.toLowerCase() === name.trim().toLowerCase());
+             if (isClothing) return `1 ${n}${typeSuffix}`;
              return /^[aeiou]/i.test(n) ? `an ${n}${typeSuffix}` : `a ${n}${typeSuffix}`;
          }
          return `${q} ${plural}${typeSuffix}`;
