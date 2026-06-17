@@ -1998,15 +1998,17 @@ function App() {
                     />
                     <label htmlFor="eachCheck" style={{ marginBottom: 0 }}>Each</label>
                   </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                    <input 
-                      type="checkbox" 
-                      id="respCheck"
-                      checked={otherRespectively}
-                      onChange={(e) => setOtherRespectively(e.target.checked)}
-                    />
-                    <label htmlFor="respCheck" style={{ marginBottom: 0 }}>Respectively</label>
-                  </div>
+                  {(otherItem2.trim() !== '' || otherItem3.trim() !== '') && (
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                      <input 
+                        type="checkbox" 
+                        id="respCheck"
+                        checked={otherRespectively}
+                        onChange={(e) => setOtherRespectively(e.target.checked)}
+                      />
+                      <label htmlFor="respCheck" style={{ marginBottom: 0 }}>Respectively</label>
+                    </div>
+                  )}
                 </div>
 
                 {otherBeachMarket && (
