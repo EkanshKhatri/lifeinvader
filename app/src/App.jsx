@@ -603,7 +603,7 @@ function App() {
     }
 
     if (otherType === 'Items') {
-      const formatItem = (qty, name, quality, isBulk, itemType, itemColor, itemSim) => {
+      const formatItem = (qty, name, quality, isBulk, itemType, itemColor, itemSim, itemEach) => {
          const q = qty.trim();
          let n = name.trim();
          if (!n) return '';
@@ -634,6 +634,9 @@ function App() {
          if (isBulk) return `${plural}${typeSuffix}${simStr}`;
 
          if (!q) {
+             if (itemEach) {
+                 return `${plural}${typeSuffix}${simStr}`;
+             }
              return `${n}${typeSuffix}${simStr}`;
          }
 
@@ -652,9 +655,9 @@ function App() {
          return `${q} ${plural}${typeSuffix}${simStr}`;
       };
 
-      const item1Str = formatItem(otherQty1, otherItem1, otherItem1Quality, otherBulk, otherItem1Type, otherItem1Color, otherItem1Sim);
-      const item2Str = formatItem(otherQty2, otherItem2, otherItem2Quality, otherBulk, otherItem2Type, otherItem2Color, otherItem2Sim);
-      const item3Str = formatItem(otherQty3, otherItem3, otherItem3Quality, otherBulk, otherItem3Type, otherItem3Color, otherItem3Sim);
+      const item1Str = formatItem(otherQty1, otherItem1, otherItem1Quality, otherBulk, otherItem1Type, otherItem1Color, otherItem1Sim, otherEach);
+      const item2Str = formatItem(otherQty2, otherItem2, otherItem2Quality, otherBulk, otherItem2Type, otherItem2Color, otherItem2Sim, otherEach);
+      const item3Str = formatItem(otherQty3, otherItem3, otherItem3Quality, otherBulk, otherItem3Type, otherItem3Color, otherItem3Sim, otherEach);
 
       const items = [item1Str, item2Str, item3Str].filter(i => i !== '');
       if (items.length === 0) return '';
