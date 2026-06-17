@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { carsList, allLocations, officialLocations, unofficialLocations, familyBusinesses, generalBusinesses, sharesBusinesses, workProfessions, constructionRoles, otherItemsList, partyLocations, otherServices, clothingItems } from './data';
+import { carsList, allLocations, officialLocations, unofficialLocations, familyBusinesses, generalBusinesses, sharesBusinesses, workProfessions, constructionRoles, otherItemsList, partyLocations, otherServices, clothingItems, colorsList } from './data';
 import './index.css';
 
 function App() {
@@ -1806,7 +1806,7 @@ function App() {
                     {clothingItems.map(c => c.toLowerCase()).includes(otherItem1.trim().toLowerCase()) && (
                       <div className="form-group" style={{ flex: 1, marginBottom: 0 }}>
                         <label>Color</label>
-                        <input type="text" className="search-input" placeholder="e.g., red, neon" value={otherItem1Color} onChange={(e) => setOtherItem1Color(e.target.value)} />
+                        <input type="text" className="search-input" list="colorsList" placeholder="e.g., red, neon" value={otherItem1Color} onChange={(e) => setOtherItem1Color(e.target.value)} />
                       </div>
                     )}
                     <div className="form-group" style={{ flex: 1, marginBottom: 0 }}>
@@ -1876,7 +1876,7 @@ function App() {
                     {clothingItems.map(c => c.toLowerCase()).includes(otherItem2.trim().toLowerCase()) && (
                       <div className="form-group" style={{ flex: 1, marginBottom: 0 }}>
                         <label>Color</label>
-                        <input type="text" className="search-input" placeholder="e.g., red, neon" value={otherItem2Color} onChange={(e) => setOtherItem2Color(e.target.value)} />
+                        <input type="text" className="search-input" list="colorsList" placeholder="e.g., red, neon" value={otherItem2Color} onChange={(e) => setOtherItem2Color(e.target.value)} />
                       </div>
                     )}
                     <div className="form-group" style={{ flex: 1, marginBottom: 0 }}>
@@ -1946,7 +1946,7 @@ function App() {
                     {clothingItems.map(c => c.toLowerCase()).includes(otherItem3.trim().toLowerCase()) && (
                       <div className="form-group" style={{ flex: 1, marginBottom: 0 }}>
                         <label>Color</label>
-                        <input type="text" className="search-input" placeholder="e.g., red, neon" value={otherItem3Color} onChange={(e) => setOtherItem3Color(e.target.value)} />
+                        <input type="text" className="search-input" list="colorsList" placeholder="e.g., red, neon" value={otherItem3Color} onChange={(e) => setOtherItem3Color(e.target.value)} />
                       </div>
                     )}
                     <div className="form-group" style={{ flex: 1, marginBottom: 0 }}>
@@ -1970,6 +1970,9 @@ function App() {
                     </div>
                   </div>
                 </div>
+                <datalist id="colorsList">
+                  {colorsList.map(c => <option key={c} value={c} />)}
+                </datalist>
                 <datalist id="otherItemsList">
                   {otherItemsList.map(item => <option key={item} value={item} />)}
                 </datalist>

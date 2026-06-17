@@ -992,3 +992,7 @@ export const partyLocations = [
 export const otherServices = [
   "lawyer", "personal driver", "professional dancer", "professional singer", "DJ", "alliance"
 ];
+
+export const colorsList = [
+  "Black", "White", "Red", "Blue", "Green", "Yellow", "Orange", "Purple", "Pink", "Brown", "Grey", "Silver", "Gold", "Cyan", "Magenta", "Neon", "Multi-Color"
+];
