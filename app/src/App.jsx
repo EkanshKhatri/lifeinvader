@@ -2034,7 +2034,7 @@ function App() {
                       <label htmlFor="bulkCheck" style={{ marginBottom: 0 }}>Bulk</label>
                     </div>
                   )}
-                  {(otherItem2.trim() !== '' || otherItem3.trim() !== '' || (otherQty1.trim() !== '1' && otherQty1.trim() !== '')) && (
+                  {(otherItem2.trim() !== '' || otherItem3.trim() !== '' || otherQty1.trim() !== '1') && (
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                       <input 
                         type="checkbox" 
