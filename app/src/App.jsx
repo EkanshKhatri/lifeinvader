@@ -622,9 +622,9 @@ function App() {
             }
          }
 
+         if (isBulk) return `${plural}${typeSuffix}`;
+
          if (!q) {
-             if (isBulk) return `${plural}${typeSuffix}`;
-             
              const low = n.toLowerCase();
              if (low === 'battery' || low === 'seed' || low === 'fuel canister' || low === 'premium fuel canister' || low.endsWith(' backpack') || low.includes('container') || low.startsWith('automatic')) {
                  return /^[aeiou]/i.test(n) ? `an ${n}${typeSuffix}` : `a ${n}${typeSuffix}`;
