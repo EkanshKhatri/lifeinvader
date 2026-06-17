@@ -625,17 +625,16 @@ function App() {
 
          if (isBulk) return `${plural}${typeSuffix}`;
 
-         if (!q) {
-             const low = n.toLowerCase();
-             if (low === 'battery' || low === 'seed' || low === 'fuel canister' || low === 'premium fuel canister' || low.endsWith(' backpack') || low.includes('container') || low.startsWith('automatic')) {
-                 return /^[aeiou]/i.test(n) ? `an ${n}${typeSuffix}` : `a ${n}${typeSuffix}`;
-             }
-             return `${n}${typeSuffix}`;
-         }
-         
-         if (q === '1') {
+         if (!q || q === '1') {
              const isClothing = clothingItems.some(c => c.toLowerCase() === name.trim().toLowerCase());
              if (isClothing) return `${n}${typeSuffix}`;
+             
+             const low = n.toLowerCase();
+             // Mass nouns or plurals that shouldn't get a/an
+             const noArticle = low.endsWith('s') && !low.endsWith('glass') && !low.endsWith('pass') && !low.endsWith('canvas') || low.includes('fish') || low === 'snow' || low === 'sand' || low === 'timber' || low === 'milk' || low.includes('inventory') || low.includes('scrap metal') || low.includes('top quality');
+             
+             if (noArticle) return `${n}${typeSuffix}`;
+             
              return /^[aeiou]/i.test(n) ? `an ${n}${typeSuffix}` : `a ${n}${typeSuffix}`;
          }
          return `${q} ${plural}${typeSuffix}`;
