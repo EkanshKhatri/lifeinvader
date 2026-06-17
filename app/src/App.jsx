@@ -703,7 +703,9 @@ function App() {
       if (fp3 && items.length > 2) validPrices.push(fp3);
       
       if (validPrices.length > 0) {
-         if (validPrices.length === 1) {
+         if (items.length > 1 && validPrices.length < items.length) {
+            priceStr = 'Negotiable.';
+         } else if (validPrices.length === 1) {
             priceStr = validPrices[0] + (validPrices[0] === 'Negotiable' ? '' : priceSuffix) + '.';
          } else {
             if (validPrices.every(p => p === 'Negotiable')) {
@@ -1991,15 +1993,17 @@ function App() {
                       <label htmlFor="beachMarket" style={{ marginBottom: 0 }}>Beach Market</label>
                     </div>
                   )}
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                    <input 
-                      type="checkbox" 
-                      id="bulkCheck"
-                      checked={otherBulk}
-                      onChange={(e) => setOtherBulk(e.target.checked)}
-                    />
-                    <label htmlFor="bulkCheck" style={{ marginBottom: 0 }}>Bulk</label>
-                  </div>
+                  {![otherItem1, otherItem2, otherItem3].some(item => clothingItems.map(c => c.toLowerCase()).includes(item.trim().toLowerCase())) && (
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                      <input 
+                        type="checkbox" 
+                        id="bulkCheck"
+                        checked={otherBulk}
+                        onChange={(e) => setOtherBulk(e.target.checked)}
+                      />
+                      <label htmlFor="bulkCheck" style={{ marginBottom: 0 }}>Bulk</label>
+                    </div>
+                  )}
                   {(otherItem2.trim() !== '' || otherItem3.trim() !== '' || (otherQty1.trim() !== '1' && otherQty1.trim() !== '')) && (
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                       <input 
