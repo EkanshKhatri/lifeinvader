@@ -1,15 +1,13 @@
 import { useState, useEffect } from 'react';
-import { formatAd } from './utils/formatter';
-import { carsList, allLocations, officialLocations, unofficialLocations, familyBusinesses, generalBusinesses, sharesBusinesses, workProfessions, constructionRoles } from './data';
+import { carsList, allLocations, officialLocations, unofficialLocations, familyBusinesses, generalBusinesses, sharesBusinesses, workProfessions, constructionRoles, otherItemsList, partyLocations, otherServices, clothingItems } from './data';
 import './index.css';
 
 function App() {
   const [input, setInput] = useState('');
   const [output, setOutput] = useState('');
   const [category, setCategory] = useState('');
-  const [manualCategory, setManualCategory] = useState('Auto-Detect');
+  const [manualCategory, setManualCategory] = useState('Auto');
   const [copied, setCopied] = useState(false);
-  const [loading, setLoading] = useState(false);
   
   const [carSearch, setCarSearch] = useState('');
   const [showDropdown, setShowDropdown] = useState(false);
@@ -70,7 +68,49 @@ function App() {
 
   const [workIsPlural, setWorkIsPlural] = useState(false);
 
-  const categories = ['Auto-Detect', 'Auto', 'Real Estate', 'Business', 'Work', 'Dating', 'Other'];
+  // Dating State
+  const [datingType, setDatingType] = useState('Family');
+
+  // Other State
+  const [otherType, setOtherType] = useState('Items'); // Items, Services, Parties, Games
+  const [otherItem1, setOtherItem1] = useState('');
+  const [otherItem2, setOtherItem2] = useState('');
+  const [otherItem3, setOtherItem3] = useState('');
+  const [otherBeachMarket, setOtherBeachMarket] = useState(false);
+  const [otherBeachShop, setOtherBeachShop] = useState('');
+  const [otherBulk, setOtherBulk] = useState(false);
+  const [otherServiceType, setOtherServiceType] = useState('Lawyer');
+  const [otherBusinessOwner, setOtherBusinessOwner] = useState('');
+  const [otherEventType, setOtherEventType] = useState('Party');
+  const [otherEventLocation, setOtherEventLocation] = useState('');
+  const [otherPartyHouseNum, setOtherPartyHouseNum] = useState('');
+  const [otherWeddingNames, setOtherWeddingNames] = useState('');
+  const [otherWeddingTime, setOtherWeddingTime] = useState('');
+  const [otherCarBrand, setOtherCarBrand] = useState('');
+  const [otherGameType, setOtherGameType] = useState('Dice');
+  const [otherGameBet, setOtherGameBet] = useState('');
+  const [otherPrice1, setOtherPrice1] = useState('');
+  const [otherPrice2, setOtherPrice2] = useState('');
+  const [otherPrice3, setOtherPrice3] = useState('');
+  const [otherQty1, setOtherQty1] = useState('');
+  const [otherQty2, setOtherQty2] = useState('');
+  const [otherQty3, setOtherQty3] = useState('');
+  const [otherEach, setOtherEach] = useState(false);
+  const [otherRespectively, setOtherRespectively] = useState(false);
+  const [otherPrice1Unit, setOtherPrice1Unit] = useState('None');
+  const [otherPrice2Unit, setOtherPrice2Unit] = useState('None');
+  const [otherPrice3Unit, setOtherPrice3Unit] = useState('None');
+  const [otherItem1Quality, setOtherItem1Quality] = useState('');
+  const [otherItem2Quality, setOtherItem2Quality] = useState('');
+  const [otherItem3Quality, setOtherItem3Quality] = useState('');
+  const [otherItem1Type, setOtherItem1Type] = useState('');
+  const [otherItem2Type, setOtherItem2Type] = useState('');
+  const [otherItem3Type, setOtherItem3Type] = useState('');
+  const [otherItem1Color, setOtherItem1Color] = useState('');
+  const [otherItem2Color, setOtherItem2Color] = useState('');
+  const [otherItem3Color, setOtherItem3Color] = useState('');
+
+  const categories = ['Auto', 'Real Estate', 'Business', 'Work', 'Dating', 'Other'];
 
   const filteredCars = carSearch.length > 0 
     ? carsList.filter(car => car.toLowerCase().includes(carSearch.toLowerCase())).slice(0, 50)
@@ -215,7 +255,7 @@ function App() {
     } else {
       ad = `Selling ${objStr}${featuresStr}${locStr}. Price: ${priceStr}.`;
     }
-    return ad;
+    return ad.replace('g.s.. ', 'g.s. ').replace('w.h.. ', 'w.h. ');
   };
 
   const generateAutoAd = () => {
@@ -490,11 +530,230 @@ function App() {
        return finalStr + ` Salary: ${priceStr}.`;
   };
 
+  const generateOtherAd = () => {
+    if (otherType === 'Games') {
+      let betStr = 'Negotiable.';
+      if (otherGameBet.trim()) {
+        const val = otherGameBet.trim().toLowerCase();
+        if (val === 'negotiable' || val === 'neg') betStr = 'Negotiable.';
+        else {
+           const num = parseFloat(val.replace(/[^0-9]/g, ''));
+           if (num > 10000000) betStr = 'Negotiable.';
+           else betStr = '$' + (num.toLocaleString('de-DE')) + '.';
+        }
+      }
+      return `Looking to play ${otherGameType.toLowerCase()}. Bet: ${betStr}`;
+    }
+
+    if (otherType === 'Services') {
+      if (otherServiceType === 'Business owner') {
+         if (!otherBusinessOwner) return 'Looking for a Business owner.';
+         return `Looking for a ${otherBusinessOwner} owner.`;
+      }
+      if (otherServiceType === 'Alliance') return `Looking for an alliance.`;
+      return `Looking for a ${otherServiceType === 'DJ' ? 'DJ' : otherServiceType.toLowerCase()}.`;
+    }
+
+    if (otherType === 'Parties') {
+      if (otherEventType === 'Wedding') {
+         if (otherWeddingNames && otherWeddingTime) {
+             return `Wedding at Church for ${otherWeddingNames.trim()} at ${otherWeddingTime.trim()}.`;
+         }
+         return `Wedding at Church.`;
+      }
+      if (otherEventType === 'Car meet') {
+         let meetLocStr = '_';
+         const loc = otherEventLocation.trim();
+         if (loc) {
+             if (loc.toLowerCase() === 'house' || loc.toLowerCase() === 'apartment' || loc.toLowerCase() === 'houses/apartment') {
+                 const type = loc.toLowerCase() === 'apartment' ? 'apartment' : 'house';
+                 meetLocStr = type;
+                 if (otherPartyHouseNum.trim()) meetLocStr += ` №${otherPartyHouseNum.trim()}`;
+             } else if (loc === 'The beach' || loc === 'The yacht') {
+                 meetLocStr = loc.toLowerCase();
+             } else {
+                 meetLocStr = loc;
+             }
+         }
+         if (otherCarBrand) {
+             return `${otherCarBrand} exclusive car meet at ${meetLocStr}.`;
+         }
+         return `Car meet at ${meetLocStr}.`;
+      }
+      const loc = otherEventLocation.trim();
+      let locStr = '';
+      if (loc) {
+          if (loc.toLowerCase() === 'house' || loc.toLowerCase() === 'apartment' || loc.toLowerCase() === 'houses/apartment') {
+              const type = loc.toLowerCase() === 'apartment' ? 'apartment' : 'house';
+              locStr = ` at ${type}`;
+              if (otherPartyHouseNum.trim()) locStr += ` №${otherPartyHouseNum.trim()}`;
+          } else if (loc === 'The beach' || loc === 'The yacht') {
+              locStr = ` at ${loc.toLowerCase()}`;
+          } else {
+              locStr = ` at ${loc}`;
+          }
+      }
+      if (!locStr) {
+          return `Looking for a ${otherEventType === 'Pool party' ? 'pool party' : 'party'}.`;
+      }
+      return `${otherEventType === 'Pool party' ? 'Pool party' : 'Party'}${locStr}.`;
+    }
+
+    if (otherType === 'Items') {
+      const formatItem = (qty, name, quality, isBulk, itemType, itemColor) => {
+         const q = qty.trim();
+         let n = name.trim();
+         if (!n) return '';
+         if (itemColor && itemColor.trim()) n = `${itemColor.trim().toLowerCase()} ${n}`;
+         if (quality) n = `${quality.toLowerCase()} quality ${n}`;
+
+         let plural = n;
+         if (n.endsWith('y') && !n.endsWith('ey')) plural = n.slice(0, -1) + 'ies';
+         else if (n.endsWith('s')) plural = n;
+         else if (n.toLowerCase().includes('fish') || n === 'snow' || n === 'sand' || n === 'timber' || n === 'milk' || n.includes('inventory')) plural = n;
+         else plural = n + 's';
+
+         let typeSuffix = '';
+         if (itemType) {
+            let t = itemType.trim().replace(/extras?/ig, 'type');
+            if (t) {
+                if (t.toLowerCase().startsWith('type')) typeSuffix = ` of ${t.toLowerCase()}`;
+                else typeSuffix = ` of type ${t}`;
+            }
+         }
+
+         if (!q) {
+             if (isBulk) return `${plural}${typeSuffix}`;
+             
+             const low = n.toLowerCase();
+             if (low === 'battery' || low === 'seed' || low === 'fuel canister' || low === 'premium fuel canister' || low.endsWith(' backpack') || low.includes('container') || low.startsWith('automatic')) {
+                 return /^[aeiou]/i.test(n) ? `an ${n}${typeSuffix}` : `a ${n}${typeSuffix}`;
+             }
+             return `${n}${typeSuffix}`;
+         }
+         
+         if (q === '1') return `1 ${n}${typeSuffix}`;
+         return `${q} ${plural}${typeSuffix}`;
+      };
+
+      const item1Str = formatItem(otherQty1, otherItem1, otherItem1Quality, otherBulk, otherItem1Type, otherItem1Color);
+      const item2Str = formatItem(otherQty2, otherItem2, otherItem2Quality, otherBulk, otherItem2Type, otherItem2Color);
+      const item3Str = formatItem(otherQty3, otherItem3, otherItem3Quality, otherBulk, otherItem3Type, otherItem3Color);
+
+      const items = [item1Str, item2Str, item3Str].filter(i => i !== '');
+      if (items.length === 0) return '';
+      
+      let itemsStr = '';
+      if (otherBeachMarket) {
+          itemsStr = items.length > 1 ? 'various items' : items[0];
+      } else {
+          if (items.length === 1) itemsStr = items[0];
+          else if (items.length === 2) itemsStr = `${items[0]} and ${items[1]}`;
+          else itemsStr = `${items[0]}, ${items[1]} and ${items[2]}`;
+      }
+      
+      let marketStr = '';
+      if (otherBeachMarket) {
+          marketStr = ` at the beach market shop №${otherBeachShop.trim()}`;
+      }
+      
+      let bulkStr = otherBulk ? ' in bulk' : '';
+      let priceSuffix = '';
+      if (otherEach) priceSuffix += ' each';
+      if (otherRespectively) priceSuffix += ' respectively';
+
+      let priceStr = 'Negotiable.';
+      
+      const p1 = otherPrice1.trim();
+      const p2 = otherPrice2.trim();
+      const p3 = otherPrice3.trim();
+      
+      const formatPrice = (p, unit) => {
+         if (!p) return null;
+         const val = p.toLowerCase();
+         if (val === 'negotiable' || val === 'neg') return 'Negotiable';
+         
+         if (unit === 'Million') {
+             const numStr = p.replace(/[^\d.,]/g, '');
+             if (numStr) {
+                 const parsed = parseFloat(numStr.replace(/,/g, '.'));
+                 if (!isNaN(parsed)) return '$' + parsed + ' Million';
+             }
+         }
+         
+         if (/^\$?\d+$/.test(p)) {
+             const digits = p.replace(/[^0-9]/g, '');
+             return '$' + parseInt(digits, 10).toLocaleString('de-DE');
+         }
+         return p;
+      };
+      
+      const fp1 = formatPrice(p1, otherPrice1Unit);
+      const fp2 = formatPrice(p2, otherPrice2Unit);
+      const fp3 = formatPrice(p3, otherPrice3Unit);
+      
+      const validPrices = [];
+      if (fp1) validPrices.push(fp1);
+      if (fp2 && items.length > 1) validPrices.push(fp2);
+      if (fp3 && items.length > 2) validPrices.push(fp3);
+      
+      if (validPrices.length > 0) {
+         if (validPrices.length === 1) {
+            priceStr = validPrices[0] + (validPrices[0] === 'Negotiable' ? '' : priceSuffix) + '.';
+         } else {
+            if (validPrices.every(p => p === 'Negotiable')) {
+               priceStr = 'Negotiable' + priceSuffix + '.';
+             } else {
+                if (validPrices.length === 2) {
+                   priceStr = validPrices[0] + ' and ' + validPrices[1] + priceSuffix + '.';
+                } else {
+                   priceStr = validPrices[0] + ', ' + validPrices[1] + ' and ' + validPrices[2] + priceSuffix + '.';
+                }
+             }
+         }
+      }
+      
+      const label = formAction === 'Buy' ? 'Budget' : 'Price';
+      if (otherBeachMarket) {
+         if ((fp1 || fp2 || fp3) && priceStr !== 'Negotiable.') {
+            return `${formAction === 'Buy' ? 'Buying' : 'Selling'} ${itemsStr}${bulkStr}${marketStr}. Price: ${priceStr}`;
+         }
+         return `${formAction === 'Buy' ? 'Buying' : 'Selling'} ${itemsStr}${bulkStr} for good prices${marketStr}.`;
+      }
+      
+      return `${formAction === 'Buy' ? 'Buying' : formAction === 'Sell' ? 'Selling' : 'Trading'} ${itemsStr}${bulkStr}${marketStr}. ${label}: ${priceStr}`;
+    }
+  };
+
+  const generateDatingAd = () => {
+    const typeMap = {
+      'Family': 'a family',
+      'Family Members': 'family members',
+      'Date': 'a date',
+      'Wife': 'a wife',
+      'Husband': 'a husband',
+      'Valentine': 'a valentine',
+      'Friend': 'a friend',
+      'Friends': 'friends',
+      'Boyfriend': 'a boyfriend',
+      'Boyfriends': 'boyfriends',
+      'Girlfriend': 'a girlfriend',
+      'Girlfriends': 'girlfriends',
+      'Casino Poker Players': 'Casino poker players'
+    };
+
+    const lookup = typeMap[datingType];
+    if (!lookup) return '';
+    return `Looking for ${lookup}.`;
+  };
+
   const applyDigitRule = (text) => {
     if (!text) return text;
     let trimmed = text.trim();
     if (trimmed.endsWith('.')) {
       if (/\d$/.test(trimmed.slice(0, -1))) {
+        if (/№\d+\.$/.test(trimmed)) return trimmed;
+        if (/type \d+\.$/i.test(trimmed)) return trimmed;
         return trimmed.slice(0, -1);
       }
     }
@@ -515,49 +774,35 @@ function App() {
     } else if (manualCategory === 'Work') {
       rawOutput = generateWorkAd();
       setCategory('Work');
-    } else if (manualCategory === 'Auto-Detect') {
-      if (input.trim() === '') {
-        setCategory('');
-      }
+    } else if (manualCategory === 'Dating') {
+      rawOutput = generateDatingAd();
+      setCategory('Dating');
+    } else if (manualCategory === 'Other') {
+      rawOutput = generateOtherAd();
+      setCategory('Other');
     } else {
-      if (input.trim() !== '') {
-        rawOutput = `${manualCategory} | ${input}`;
-      }
       setCategory(manualCategory);
+      if (input.trim() === '') setOutput('');
+      return;
     }
     
-    if (manualCategory !== 'Auto-Detect') {
-      setOutput(applyDigitRule(rawOutput));
-    } else if (input.trim() === '') {
-      setOutput('');
-    }
+    setOutput(applyDigitRule(rawOutput));
   }, [
     input, manualCategory, 
     formAction, formCar1, formCar2, formMoney, formMoneyUnit, isNegotiable, 
     configLevel, hasVisuals, hasWheels, wheelType, hasInsurance, hasTurbo, hasDrift,
     propertyType, apartmentComplex, formHouseNum, houseQuantity, formLocation, locPrefix, hasGarden, garageSpaces, warehouses, customInterior,
     hasHelipad, hasPool, hasTennis, driveway, spaciousBackyard, views,
-    hasHelipad, hasPool, hasTennis, driveway, spaciousBackyard, views,
     businessCategory, selectedBusiness, formBusNum, businessModifier, cropType, plantationBeds, sharesQuantity,
-    workAction, workProfession, workExperience, constructionSiteNum, truckerVanPercent, workIsPlural
+    workAction, workProfession, workExperience, constructionSiteNum, truckerVanPercent, workIsPlural,
+    datingType,
+    otherType, otherItem1, otherItem2, otherItem3, otherBeachMarket, otherBeachShop, otherBulk,
+    otherServiceType, otherBusinessOwner, otherEventType, otherEventLocation, otherPartyHouseNum,
+    otherWeddingNames, otherWeddingTime, otherCarBrand, otherGameType, otherGameBet, otherPrice1, otherPrice2, otherPrice3,
+    otherQty1, otherQty2, otherQty3, otherEach, otherRespectively, otherPrice1Unit, otherPrice2Unit, otherPrice3Unit,
+    otherItem1Quality, otherItem2Quality, otherItem3Quality, otherItem1Type, otherItem2Type, otherItem3Type
   ]);
 
-
-  const handleFormat = async () => {
-    if (!input.trim() || manualCategory !== 'Auto-Detect') return;
-    
-    setLoading(true);
-    try {
-      const result = await formatAd(input);
-      setOutput(applyDigitRule(result.formattedAd));
-      setCategory(result.category);
-    } catch (error) {
-      console.error(error);
-      setOutput("Error formatting ad. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleCopy = () => {
     if (!output) return;
@@ -606,8 +851,50 @@ function App() {
     setWorkAction('Hiring');
     setWorkProfession('None');
     setWorkExperience('');
-    setConstructionSiteNum('None');
+    setTruckerVanPercent('15');
     setWorkIsPlural(false);
+
+    // Dating
+    setDatingType('Family');
+
+    // Other
+    setOtherType('Items');
+    setOtherItem1('');
+    setOtherItem2('');
+    setOtherItem3('');
+    setOtherBeachMarket(false);
+    setOtherBeachShop('');
+    setOtherBulk(false);
+    setOtherServiceType('Lawyer');
+    setOtherBusinessOwner('');
+    setOtherEventType('Party');
+    setOtherEventLocation('');
+    setOtherPartyHouseNum('');
+    setOtherWeddingNames('');
+    setOtherWeddingTime('');
+    setOtherCarBrand('');
+    setOtherGameType('Dice');
+    setOtherGameBet('');
+    setOtherPrice1('');
+    setOtherPrice2('');
+    setOtherPrice3('');
+    setOtherQty1('');
+    setOtherQty2('');
+    setOtherQty3('');
+    setOtherEach(false);
+    setOtherRespectively(false);
+    setOtherPrice1Unit('None');
+    setOtherPrice2Unit('None');
+    setOtherPrice3Unit('None');
+    setOtherItem1Quality('');
+    setOtherItem2Quality('');
+    setOtherItem3Quality('');
+    setOtherItem1Type('');
+    setOtherItem2Type('');
+    setOtherItem3Type('');
+    setOtherItem1Color('');
+    setOtherItem2Color('');
+    setOtherItem3Color('');
 
     // Global
     setFormAction('Buy');
@@ -621,14 +908,52 @@ function App() {
     setCopied(false);
   };
 
+  const handleOtherTypeChange = (newType) => {
+    if (newType === otherType) return;
+    
+    setOtherItem1('');
+    setOtherItem2('');
+    setOtherItem3('');
+    setOtherBeachMarket(false);
+    setOtherBeachShop('');
+    setOtherBulk(false);
+    setOtherEach(false);
+    setOtherRespectively(false);
+    setOtherServiceType('Lawyer');
+    setOtherBusinessOwner('');
+    setOtherEventType('Party');
+    setOtherEventLocation('');
+    setOtherPartyHouseNum('');
+    setOtherWeddingNames('');
+    setOtherWeddingTime('');
+    setOtherCarBrand('');
+    setOtherGameType('Dice');
+    setOtherGameBet('');
+    setOtherPrice1('');
+    setOtherPrice2('');
+    setOtherPrice3('');
+    setOtherQty1('');
+    setOtherQty2('');
+    setOtherQty3('');
+    setOtherPrice1Unit('None');
+    setOtherPrice2Unit('None');
+    setOtherPrice3Unit('None');
+    setOtherItem1Quality('');
+    setOtherItem2Quality('');
+    setOtherItem3Quality('');
+    setOtherItem1Type('');
+    setOtherItem2Type('');
+    setOtherItem3Type('');
+    setOtherItem1Color('');
+    setOtherItem2Color('');
+    setOtherItem3Color('');
+    
+    setOtherType(newType);
+  };
+
   return (
     <div className="container">
-      <div className="header">
-        <h1 className="logo">
-          GRAND <span className="logo-highlight">RP</span>
-        </h1>
-        <p className="subtitle">L.I. Ad Formatter AI</p>
-      </div>
+
 
       <div className="card">
         <div className="category-selector">
@@ -873,28 +1198,28 @@ function App() {
                       </label>
                     </div>
                     <div className="search-container" style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
-                      <div className="checklist" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', maxHeight: '250px', overflowY: 'auto', padding: '1.2rem', marginTop: 0, alignContent: 'start' }}>
+                      <div className="checklist" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(110px, 1fr))', maxHeight: 'none', overflowY: 'visible', padding: '1.2rem', marginTop: 0, alignContent: 'start', gap: '0.4rem' }}>
                         <div style={{ gridColumn: '1 / -1', fontSize: '0.85rem', fontWeight: 'bold', color: 'var(--primary)', marginBottom: '0.5rem' }}>Official Locations</div>
                         {[...officialLocations].sort((a, b) => a.localeCompare(b)).map(loc => (
-                          <label key={loc} className="check-item">
+                          <label key={loc} className="check-item" style={{ minWidth: 0, alignItems: 'flex-start' }}>
                             <input 
                               type="checkbox" 
                               checked={formLocation === loc} 
                               onChange={() => setFormLocation(formLocation === loc ? '' : loc)} 
                             /> 
-                            <span style={{ fontSize: '0.85rem' }}>{loc}</span>
+                            <span style={{ fontSize: '0.65rem', wordBreak: 'break-word', lineHeight: '1.4', paddingTop: '0.1rem' }}>{loc}</span>
                           </label>
                         ))}
                         
                         <div style={{ gridColumn: '1 / -1', fontSize: '0.85rem', fontWeight: 'bold', color: 'var(--primary)', marginTop: '1rem', marginBottom: '0.5rem' }}>Unofficial Locations</div>
                         {[...unofficialLocations].sort((a, b) => a.localeCompare(b)).map(loc => (
-                          <label key={loc} className="check-item">
+                          <label key={loc} className="check-item" style={{ minWidth: 0, alignItems: 'flex-start' }}>
                             <input 
                               type="checkbox" 
                               checked={formLocation === loc} 
                               onChange={() => setFormLocation(formLocation === loc ? '' : loc)} 
                             /> 
-                            <span style={{ fontSize: '0.85rem' }}>{loc}</span>
+                            <span style={{ fontSize: '0.65rem', wordBreak: 'break-word', lineHeight: '1.4', paddingTop: '0.1rem' }}>{loc}</span>
                           </label>
                         ))}
                       </div>
@@ -912,7 +1237,7 @@ function App() {
                 )}
                 
                 <div className="check-item" style={{ cursor: 'default' }}>
-                  <label style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', cursor: 'pointer', margin: 0 }}>Garage Spaces</label>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', cursor: 'help', margin: 0 }} title="Available: 2, 5, 9, 25, 30, 35 g.s.">Garage Spaces</label>
                   <select value={garageSpaces} onChange={(e) => setGarageSpaces(e.target.value)} className="check-inline-input" style={{width: 'auto', padding: '0.2rem 0.5rem'}}>
                     <option value="None">None</option>
                     {propertyType === 'House' && (
@@ -929,7 +1254,7 @@ function App() {
                 </div>
 
                 <div className="check-item" style={{ cursor: 'default' }}>
-                  <label style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', cursor: 'pointer', margin: 0 }}>Warehouses</label>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', cursor: 'help', margin: 0 }} title="Available: 3, 4, 5 w.h.">Warehouses</label>
                   <select value={warehouses} onChange={(e) => setWarehouses(e.target.value)} className="check-inline-input" style={{width: 'auto', padding: '0.2rem 0.5rem'}}>
                     <option value="None">None</option>
                     <option value="3 w.h.">3 w.h.</option>
@@ -948,7 +1273,7 @@ function App() {
                     <label className="check-item"><input type="checkbox" checked={hasTennis} onChange={(e) => setHasTennis(e.target.checked)} /> Tennis Court</label>
                     
                     <div className="check-item" style={{ cursor: 'default' }}>
-                      <label style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', cursor: 'pointer', margin: 0 }}>Driveway</label>
+                      <label style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', cursor: 'help', margin: 0 }} title="Available: long, large">Driveway</label>
                       <select value={driveway} onChange={(e) => setDriveway(e.target.value)} className="check-inline-input" style={{width: 'auto', padding: '0.2rem 0.5rem'}}>
                         <option value="None">None</option>
                         <option value="long">long</option>
@@ -961,7 +1286,7 @@ function App() {
                 )}
 
                 <div className="check-item" style={{ cursor: 'default' }}>
-                  <label style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', cursor: 'pointer', margin: 0 }}>Views</label>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', cursor: 'help', margin: 0 }} title="Available: nice, beautiful, great">Views</label>
                   <select value={views} onChange={(e) => setViews(e.target.value)} className="check-inline-input" style={{width: 'auto', padding: '0.2rem 0.5rem'}}>
                     <option value="None">None</option>
                     <option value="nice">nice</option>
@@ -1098,6 +1423,11 @@ function App() {
                       type="radio" 
                       checked={selectedBusiness === bus} 
                       onChange={() => setSelectedBusiness(bus)} 
+                      onClick={() => {
+                        if (selectedBusiness === bus) {
+                          setSelectedBusiness('None');
+                        }
+                      }}
                     /> 
                     {bus}
                   </label>
@@ -1155,28 +1485,28 @@ function App() {
                   </label>
                 </div>
                 <div className="search-container" style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
-                  <div className="checklist" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', maxHeight: '250px', overflowY: 'auto', padding: '1.2rem', marginTop: 0, alignContent: 'start' }}>
+                  <div className="checklist" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(110px, 1fr))', maxHeight: 'none', overflowY: 'visible', padding: '1.2rem', marginTop: 0, alignContent: 'start', gap: '0.4rem' }}>
                     <div style={{ gridColumn: '1 / -1', fontSize: '0.85rem', fontWeight: 'bold', color: 'var(--primary)', marginBottom: '0.5rem' }}>Official Locations</div>
                     {[...officialLocations].sort((a, b) => a.localeCompare(b)).map(loc => (
-                      <label key={loc} className="check-item">
+                      <label key={loc} className="check-item" style={{ minWidth: 0, alignItems: 'flex-start' }}>
                         <input 
                           type="checkbox" 
                           checked={formLocation === loc} 
                           onChange={() => setFormLocation(formLocation === loc ? '' : loc)} 
                         /> 
-                        <span style={{ fontSize: '0.85rem' }}>{loc}</span>
+                        <span style={{ fontSize: '0.65rem', wordBreak: 'break-word', lineHeight: '1.4', paddingTop: '0.1rem' }}>{loc}</span>
                       </label>
                     ))}
 
                     <div style={{ gridColumn: '1 / -1', fontSize: '0.85rem', fontWeight: 'bold', color: 'var(--primary)', marginTop: '1rem', marginBottom: '0.5rem' }}>Unofficial Locations</div>
                     {[...unofficialLocations].sort((a, b) => a.localeCompare(b)).map(loc => (
-                      <label key={loc} className="check-item">
+                      <label key={loc} className="check-item" style={{ minWidth: 0, alignItems: 'flex-start' }}>
                         <input 
                           type="checkbox" 
                           checked={formLocation === loc} 
                           onChange={() => setFormLocation(formLocation === loc ? '' : loc)} 
                         /> 
-                        <span style={{ fontSize: '0.85rem' }}>{loc}</span>
+                        <span style={{ fontSize: '0.65rem', wordBreak: 'break-word', lineHeight: '1.4', paddingTop: '0.1rem' }}>{loc}</span>
                       </label>
                     ))}
                   </div>
@@ -1306,28 +1636,28 @@ function App() {
                 </label>
               </div>
               <div className="search-container" style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
-                <div className="checklist" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', maxHeight: '250px', overflowY: 'auto', padding: '1.2rem', marginTop: 0, alignContent: 'start' }}>
+                <div className="checklist" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(110px, 1fr))', maxHeight: 'none', overflowY: 'visible', padding: '1.2rem', marginTop: 0, alignContent: 'start', gap: '0.4rem' }}>
                   <div style={{ gridColumn: '1 / -1', fontSize: '0.85rem', fontWeight: 'bold', color: 'var(--primary)', marginBottom: '0.5rem' }}>Official Locations</div>
                   {[...officialLocations].sort((a, b) => a.localeCompare(b)).map(loc => (
-                    <label key={loc} className="check-item">
+                    <label key={loc} className="check-item" style={{ minWidth: 0, alignItems: 'flex-start' }}>
                       <input 
                         type="checkbox" 
                         checked={formLocation === loc} 
                         onChange={() => setFormLocation(formLocation === loc ? '' : loc)} 
                       /> 
-                      <span style={{ fontSize: '0.85rem' }}>{loc}</span>
+                      <span style={{ fontSize: '0.65rem', wordBreak: 'break-word', lineHeight: '1.4', paddingTop: '0.1rem' }}>{loc}</span>
                     </label>
                   ))}
 
                   <div style={{ gridColumn: '1 / -1', fontSize: '0.85rem', fontWeight: 'bold', color: 'var(--primary)', marginTop: '1rem', marginBottom: '0.5rem' }}>Unofficial Locations</div>
                   {[...unofficialLocations].sort((a, b) => a.localeCompare(b)).map(loc => (
-                    <label key={loc} className="check-item">
+                    <label key={loc} className="check-item" style={{ minWidth: 0, alignItems: 'flex-start' }}>
                       <input 
                         type="checkbox" 
                         checked={formLocation === loc} 
                         onChange={() => setFormLocation(formLocation === loc ? '' : loc)} 
                       /> 
-                      <span style={{ fontSize: '0.85rem' }}>{loc}</span>
+                      <span style={{ fontSize: '0.65rem', wordBreak: 'break-word', lineHeight: '1.4', paddingTop: '0.1rem' }}>{loc}</span>
                     </label>
                   ))}
                 </div>
@@ -1369,25 +1699,473 @@ function App() {
           </div>
         )}
 
-        {manualCategory !== 'Auto' && manualCategory !== 'Real Estate' && manualCategory !== 'Business' && manualCategory !== 'Work' && (
-          <div className="input-section">
+        {manualCategory === 'Dating' && (
+          <div className="form-builder">
             <div className="form-group">
-              <label>Raw Player Advertisement</label>
-              <textarea
-                className="ad-input"
-                placeholder="Paste the raw text here..."
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-              />
+              <label>Looking For</label>
+              <div className="action-toggles" style={{ flexWrap: 'wrap' }}>
+                {['Family', 'Family Members', 'Date', 'Wife', 'Husband', 'Valentine', 'Friend', 'Friends', 'Boyfriend', 'Boyfriends', 'Girlfriend', 'Girlfriends', 'Casino Poker Players'].map(type => (
+                  <button
+                    key={type}
+                    className={`action-btn ${datingType === type ? 'active' : ''}`}
+                    onClick={() => setDatingType(type)}
+                    style={{ fontSize: '0.8rem', padding: '0.4rem 0.8rem' }}
+                  >
+                    {type === 'Family' ? '👨‍👩‍👧‍👦 Family' : type === 'Family Members' ? '👥 Family Members' : type === 'Date' ? '💕 Date' : type === 'Wife' ? '👰 Wife' : type === 'Husband' ? '🤵 Husband' : type === 'Valentine' ? '💝 Valentine' : type === 'Friend' ? '🤝 Friend' : type === 'Friends' ? '🤝 Friends' : type === 'Boyfriend' ? '💙 Boyfriend' : type === 'Boyfriends' ? '💙 Boyfriends' : type === 'Girlfriend' ? '💗 Girlfriend' : type === 'Girlfriends' ? '💗 Girlfriends' : '🎰 Casino Poker Players'}
+                  </button>
+                ))}
+              </div>
             </div>
-            {manualCategory === 'Auto-Detect' && (
-              <button 
-                className="btn primary-btn" 
-                onClick={handleFormat}
-                disabled={!input.trim() || loading}
-              >
-                {loading ? 'Formatting...' : 'Format Ad'}
-              </button>
+
+          </div>
+        )}
+
+        {manualCategory === 'Other' && (
+          <div className="form-builder">
+            <div className="form-group">
+              <label>Ad Type</label>
+              <div className="action-toggles">
+                {['Items', 'Services', 'Parties', 'Games'].map(type => (
+                  <button
+                    key={type}
+                    className={`action-btn ${otherType === type ? 'active' : ''}`}
+                    onClick={() => handleOtherTypeChange(type)}
+                  >
+                    {type}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {otherType === 'Items' && (
+              <>
+                <div className="form-group">
+                  <label>Action</label>
+                  <div className="action-toggles">
+                    {['Buy', 'Sell', 'Trade'].map(action => (
+                      <button
+                        key={action}
+                        className={`action-btn ${formAction === action ? 'active' : ''}`}
+                        onClick={() => setFormAction(action)}
+                      >
+                        {action}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', width: '100%' }}>
+                  
+                  {/* ROW 1 */}
+                  <div style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start' }}>
+                    <div className="form-group" style={{ flex: 2, marginBottom: 0 }}>
+                      <label>Item 1 (Required)</label>
+                      <input
+                        type="text"
+                        className="search-input"
+                        placeholder="e.g., battery"
+                        value={otherItem1}
+                        onChange={(e) => setOtherItem1(e.target.value)}
+                        list={otherItem1.length > 0 ? "otherItemsList" : ""}
+                      />
+                      {['engine tuning', 'transmission tuning', 'suspension tuning', 'brakes tuning', 'tires tuning'].includes(otherItem1.trim().toLowerCase()) && (
+                         <div className="action-toggles" style={{ marginTop: '0.5rem', flexWrap: 'wrap' }}>
+                           {['Low', 'Medium', 'High'].map(q => (
+                              <button key={q} className={`action-btn ${otherItem1Quality === q ? 'active' : ''}`} onClick={() => setOtherItem1Quality(q)} style={{ padding: '0.2rem 0.5rem', fontSize: '0.75rem' }}>{q} quality</button>
+                           ))}
+                         </div>
+                      )}
+                      {otherItem1.trim().toLowerCase() === 'fishing rod' && (
+                         <div className="action-toggles" style={{ marginTop: '0.5rem', flexWrap: 'wrap' }}>
+                           {['Low', 'Medium', 'High', 'Max', 'Advanced'].map(q => (
+                              <button key={q} className={`action-btn ${otherItem1Quality === q ? 'active' : ''}`} onClick={() => setOtherItem1Quality(q)} style={{ padding: '0.2rem 0.5rem', fontSize: '0.75rem' }}>{q} quality</button>
+                           ))}
+                         </div>
+                      )}
+                    </div>
+                    <div className="form-group" style={{ flex: 1, marginBottom: 0 }}>
+                      <label>Qty 1</label>
+                      <input
+                        type="text"
+                        className="search-input"
+                        placeholder="e.g., 3"
+                        value={otherQty1}
+                        onChange={(e) => setOtherQty1(e.target.value)}
+                      />
+                    </div>
+                    {otherItem1.trim().toLowerCase() === 'luminous wheels' && (
+                      <div className="form-group" style={{ flex: 1, marginBottom: 0 }}>
+                        <label>Type</label>
+                        <input type="text" className="search-input" placeholder="e.g., 1, 2, Sport" value={otherItem1Type} onChange={(e) => setOtherItem1Type(e.target.value)} />
+                      </div>
+                    )}
+                    {clothingItems.map(c => c.toLowerCase()).includes(otherItem1.trim().toLowerCase()) && (
+                      <div className="form-group" style={{ flex: 1, marginBottom: 0 }}>
+                        <label>Color</label>
+                        <input type="text" className="search-input" placeholder="e.g., red, neon" value={otherItem1Color} onChange={(e) => setOtherItem1Color(e.target.value)} />
+                      </div>
+                    )}
+                    <div className="form-group" style={{ flex: 1, marginBottom: 0 }}>
+                      <label>{formAction === 'Buy' ? 'Budget' : 'Price'} 1</label>
+                      <div style={{ display: 'flex', gap: '0.5rem' }}>
+                        <input
+                          type="text"
+                          className="search-input"
+                          placeholder="$15.000 or Neg"
+                          value={otherPrice1}
+                          onChange={(e) => setOtherPrice1(e.target.value)}
+                        />
+                        <button 
+                           className={`action-btn ${otherPrice1Unit === 'Million' ? 'active' : ''}`}
+                           style={{ flex: '0 0 auto', padding: '0 0.8rem', fontSize: '0.8rem', borderRadius: '10px' }}
+                           onClick={() => setOtherPrice1Unit(otherPrice1Unit === 'Million' ? 'None' : 'Million')}
+                        >
+                           Million
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* ROW 2 */}
+                  <div style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start' }}>
+                    <div className="form-group" style={{ flex: 2, marginBottom: 0 }}>
+                      <label>Item 2 (Optional)</label>
+                      <input
+                        type="text"
+                        className="search-input"
+                        placeholder="e.g., fuel canister"
+                        value={otherItem2}
+                        onChange={(e) => setOtherItem2(e.target.value)}
+                        list={otherItem2.length > 0 ? "otherItemsList" : ""}
+                      />
+                      {['engine tuning', 'transmission tuning', 'suspension tuning', 'brakes tuning', 'tires tuning'].includes(otherItem2.trim().toLowerCase()) && (
+                         <div className="action-toggles" style={{ marginTop: '0.5rem', flexWrap: 'wrap' }}>
+                           {['Low', 'Medium', 'High'].map(q => (
+                              <button key={q} className={`action-btn ${otherItem2Quality === q ? 'active' : ''}`} onClick={() => setOtherItem2Quality(q)} style={{ padding: '0.2rem 0.5rem', fontSize: '0.75rem' }}>{q} quality</button>
+                           ))}
+                         </div>
+                      )}
+                      {otherItem2.trim().toLowerCase() === 'fishing rod' && (
+                         <div className="action-toggles" style={{ marginTop: '0.5rem', flexWrap: 'wrap' }}>
+                           {['Low', 'Medium', 'High', 'Max', 'Advanced'].map(q => (
+                              <button key={q} className={`action-btn ${otherItem2Quality === q ? 'active' : ''}`} onClick={() => setOtherItem2Quality(q)} style={{ padding: '0.2rem 0.5rem', fontSize: '0.75rem' }}>{q} quality</button>
+                           ))}
+                         </div>
+                      )}
+                    </div>
+                    <div className="form-group" style={{ flex: 1, marginBottom: 0 }}>
+                      <label>Qty 2</label>
+                      <input
+                        type="text"
+                        className="search-input"
+                        placeholder="e.g., 10"
+                        value={otherQty2}
+                        onChange={(e) => setOtherQty2(e.target.value)}
+                      />
+                    </div>
+                    {otherItem2.trim().toLowerCase() === 'luminous wheels' && (
+                      <div className="form-group" style={{ flex: 1, marginBottom: 0 }}>
+                        <label>Type</label>
+                        <input type="text" className="search-input" placeholder="e.g., 1, 2, Sport" value={otherItem2Type} onChange={(e) => setOtherItem2Type(e.target.value)} />
+                      </div>
+                    )}
+                    {clothingItems.map(c => c.toLowerCase()).includes(otherItem2.trim().toLowerCase()) && (
+                      <div className="form-group" style={{ flex: 1, marginBottom: 0 }}>
+                        <label>Color</label>
+                        <input type="text" className="search-input" placeholder="e.g., red, neon" value={otherItem2Color} onChange={(e) => setOtherItem2Color(e.target.value)} />
+                      </div>
+                    )}
+                    <div className="form-group" style={{ flex: 1, marginBottom: 0 }}>
+                      <label>{formAction === 'Buy' ? 'Budget' : 'Price'} 2</label>
+                      <div style={{ display: 'flex', gap: '0.5rem' }}>
+                        <input
+                          type="text"
+                          className="search-input"
+                          placeholder="$20.000"
+                          value={otherPrice2}
+                          onChange={(e) => setOtherPrice2(e.target.value)}
+                        />
+                        <button 
+                           className={`action-btn ${otherPrice2Unit === 'Million' ? 'active' : ''}`}
+                           style={{ flex: '0 0 auto', padding: '0 0.8rem', fontSize: '0.8rem', borderRadius: '10px' }}
+                           onClick={() => setOtherPrice2Unit(otherPrice2Unit === 'Million' ? 'None' : 'Million')}
+                        >
+                           Million
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* ROW 3 */}
+                  <div style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start' }}>
+                    <div className="form-group" style={{ flex: 2, marginBottom: 0 }}>
+                      <label>Item 3 (Optional)</label>
+                      <input
+                        type="text"
+                        className="search-input"
+                        placeholder="e.g., brakes tuning"
+                        value={otherItem3}
+                        onChange={(e) => setOtherItem3(e.target.value)}
+                        list={otherItem3.length > 0 ? "otherItemsList" : ""}
+                      />
+                      {['engine tuning', 'transmission tuning', 'suspension tuning', 'brakes tuning', 'tires tuning'].includes(otherItem3.trim().toLowerCase()) && (
+                         <div className="action-toggles" style={{ marginTop: '0.5rem', flexWrap: 'wrap' }}>
+                           {['Low', 'Medium', 'High'].map(q => (
+                              <button key={q} className={`action-btn ${otherItem3Quality === q ? 'active' : ''}`} onClick={() => setOtherItem3Quality(q)} style={{ padding: '0.2rem 0.5rem', fontSize: '0.75rem' }}>{q} quality</button>
+                           ))}
+                         </div>
+                      )}
+                      {otherItem3.trim().toLowerCase() === 'fishing rod' && (
+                         <div className="action-toggles" style={{ marginTop: '0.5rem', flexWrap: 'wrap' }}>
+                           {['Low', 'Medium', 'High', 'Max', 'Advanced'].map(q => (
+                              <button key={q} className={`action-btn ${otherItem3Quality === q ? 'active' : ''}`} onClick={() => setOtherItem3Quality(q)} style={{ padding: '0.2rem 0.5rem', fontSize: '0.75rem' }}>{q} quality</button>
+                           ))}
+                         </div>
+                      )}
+                    </div>
+                    <div className="form-group" style={{ flex: 1, marginBottom: 0 }}>
+                      <label>Qty 3</label>
+                      <input
+                        type="text"
+                        className="search-input"
+                        placeholder="e.g., 50"
+                        value={otherQty3}
+                        onChange={(e) => setOtherQty3(e.target.value)}
+                      />
+                    </div>
+                    {otherItem3.trim().toLowerCase() === 'luminous wheels' && (
+                      <div className="form-group" style={{ flex: 1, marginBottom: 0 }}>
+                        <label>Type</label>
+                        <input type="text" className="search-input" placeholder="e.g., 1, 2, Sport" value={otherItem3Type} onChange={(e) => setOtherItem3Type(e.target.value)} />
+                      </div>
+                    )}
+                    {clothingItems.map(c => c.toLowerCase()).includes(otherItem3.trim().toLowerCase()) && (
+                      <div className="form-group" style={{ flex: 1, marginBottom: 0 }}>
+                        <label>Color</label>
+                        <input type="text" className="search-input" placeholder="e.g., red, neon" value={otherItem3Color} onChange={(e) => setOtherItem3Color(e.target.value)} />
+                      </div>
+                    )}
+                    <div className="form-group" style={{ flex: 1, marginBottom: 0 }}>
+                      <label>{formAction === 'Buy' ? 'Budget' : 'Price'} 3</label>
+                      <div style={{ display: 'flex', gap: '0.5rem' }}>
+                        <input
+                          type="text"
+                          className="search-input"
+                          placeholder="Negotiable"
+                          value={otherPrice3}
+                          onChange={(e) => setOtherPrice3(e.target.value)}
+                        />
+                        <button 
+                           className={`action-btn ${otherPrice3Unit === 'Million' ? 'active' : ''}`}
+                           style={{ flex: '0 0 auto', padding: '0 0.8rem', fontSize: '0.8rem', borderRadius: '10px' }}
+                           onClick={() => setOtherPrice3Unit(otherPrice3Unit === 'Million' ? 'None' : 'Million')}
+                        >
+                           Million
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <datalist id="otherItemsList">
+                  {otherItemsList.map(item => <option key={item} value={item} />)}
+                </datalist>
+
+                <div className="form-group" style={{ flexDirection: 'row', alignItems: 'center', gap: '1.5rem', flexWrap: 'wrap' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <input 
+                      type="checkbox" 
+                      id="beachMarket"
+                      checked={otherBeachMarket}
+                      onChange={(e) => setOtherBeachMarket(e.target.checked)}
+                    />
+                    <label htmlFor="beachMarket" style={{ marginBottom: 0 }}>Beach Market</label>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <input 
+                      type="checkbox" 
+                      id="bulkCheck"
+                      checked={otherBulk}
+                      onChange={(e) => setOtherBulk(e.target.checked)}
+                    />
+                    <label htmlFor="bulkCheck" style={{ marginBottom: 0 }}>Bulk</label>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <input 
+                      type="checkbox" 
+                      id="eachCheck"
+                      checked={otherEach}
+                      onChange={(e) => setOtherEach(e.target.checked)}
+                    />
+                    <label htmlFor="eachCheck" style={{ marginBottom: 0 }}>Each</label>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <input 
+                      type="checkbox" 
+                      id="respCheck"
+                      checked={otherRespectively}
+                      onChange={(e) => setOtherRespectively(e.target.checked)}
+                    />
+                    <label htmlFor="respCheck" style={{ marginBottom: 0 }}>Respectively</label>
+                  </div>
+                </div>
+
+                {otherBeachMarket && (
+                  <div className="form-group">
+                    <label>Shop №</label>
+                    <input
+                      type="number"
+                      className="search-input"
+                      placeholder="e.g., 23"
+                      value={otherBeachShop}
+                      onChange={(e) => setOtherBeachShop(e.target.value)}
+                    />
+                  </div>
+                )}
+              </>
+            )}
+
+            {otherType === 'Services' && (
+              <>
+                <div className="form-group">
+                  <label>Service Type</label>
+                  <select 
+                    className="search-input" 
+                    value={otherServiceType}
+                    onChange={(e) => setOtherServiceType(e.target.value)}
+                    style={{ padding: '0.8rem', backgroundColor: '#16161e', color: 'var(--text)', cursor: 'pointer' }}
+                  >
+                    {['Lawyer', 'Personal driver', 'Professional dancer', 'Professional singer', 'DJ', 'Alliance', 'Business owner'].map(s => (
+                      <option key={s} value={s}>{s}</option>
+                    ))}
+                  </select>
+                </div>
+                {otherServiceType === 'Business owner' && (
+                  <div className="form-group">
+                    <label>Business Type</label>
+                    <input
+                      type="text"
+                      className="search-input"
+                      placeholder="e.g., 24/7 Store"
+                      value={otherBusinessOwner}
+                      onChange={(e) => setOtherBusinessOwner(e.target.value)}
+                    />
+                  </div>
+                )}
+              </>
+            )}
+
+            {otherType === 'Parties' && (
+              <>
+                <div className="form-group">
+                  <label>Event Type</label>
+                  <div className="action-toggles">
+                    {['Party', 'Pool party', 'Wedding', 'Car meet'].map(type => (
+                      <button
+                        key={type}
+                        className={`action-btn ${otherEventType === type ? 'active' : ''}`}
+                        onClick={() => setOtherEventType(type)}
+                      >
+                        {type}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                {otherEventType === 'Wedding' && (
+                  <>
+                    <div className="form-group">
+                      <label>Names (Optional)</label>
+                      <input
+                        type="text"
+                        className="search-input"
+                        placeholder="e.g., John Smith and Susan Jones"
+                        value={otherWeddingNames}
+                        onChange={(e) => setOtherWeddingNames(e.target.value)}
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label>Time (Optional)</label>
+                      <input
+                        type="time"
+                        className="search-input"
+                        value={otherWeddingTime}
+                        onChange={(e) => setOtherWeddingTime(e.target.value)}
+                      />
+                    </div>
+                  </>
+                )}
+                {otherEventType === 'Car meet' && (
+                  <div className="form-group">
+                    <label>Car Brand (Optional)</label>
+                    <input
+                      type="text"
+                      className="search-input"
+                      placeholder="e.g., Truffade"
+                      value={otherCarBrand}
+                      onChange={(e) => setOtherCarBrand(e.target.value)}
+                    />
+                  </div>
+                )}
+                {otherEventType !== 'Wedding' && (
+                  <>
+                    <div className="form-group">
+                      <label>Location</label>
+                      <div className="checklist" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', maxHeight: 'none', padding: '1rem', marginTop: 0 }}>
+                        {partyLocations.map(loc => (
+                          <label key={loc} className="check-item" style={{ minWidth: 0, alignItems: 'flex-start' }}>
+                            <input 
+                              type="checkbox" 
+                              checked={otherEventLocation === loc}
+                              onChange={() => setOtherEventLocation(otherEventLocation === loc ? '' : loc)}
+                            /> 
+                            <span style={{ fontSize: '0.75rem', lineHeight: '1.4', paddingTop: '0.15rem' }}>{loc}</span>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+                    {(otherEventLocation.toLowerCase().includes('house') || otherEventLocation.toLowerCase().includes('apartment')) && (
+                      <div className="form-group">
+                        <label>House/Apartment №</label>
+                        <input
+                          type="text"
+                          className="search-input"
+                          placeholder="e.g., 49"
+                          value={otherPartyHouseNum}
+                          onChange={(e) => setOtherPartyHouseNum(e.target.value)}
+                        />
+                      </div>
+                    )}
+                  </>
+                )}
+              </>
+            )}
+
+            {otherType === 'Games' && (
+              <>
+                <div className="form-group">
+                  <label>Game Type</label>
+                  <div className="action-toggles">
+                    {['Dice', 'Poker'].map(game => (
+                      <button
+                        key={game}
+                        className={`action-btn ${otherGameType === game ? 'active' : ''}`}
+                        onClick={() => setOtherGameType(game)}
+                      >
+                        {game}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <div className="form-group">
+                  <label>Bet Amount (Max $10 Million)</label>
+                  <input
+                    type="text"
+                    className="search-input"
+                    placeholder="e.g., 100000 or Negotiable"
+                    value={otherGameBet}
+                    onChange={(e) => setOtherGameBet(e.target.value)}
+                  />
+                </div>
+              </>
             )}
           </div>
         )}
@@ -1397,10 +2175,14 @@ function App() {
             <label>Formatted Output</label>
             {category && <span className="badge">{category}</span>}
           </div>
-          <div className="output-box">
-            {output || <span className="placeholder">Result will appear here...</span>}
-          </div>
+          <textarea
+            className="output-box"
+            placeholder="Result will appear here..."
+            value={output}
+            onChange={(e) => setOutput(e.target.value)}
+          />
         </div>
+
 
         <div className="actions" style={{display: 'flex', gap: '1.5rem'}}>
           <button 

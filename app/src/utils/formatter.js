@@ -125,38 +125,61 @@ const WORK_RULES = `WORK & HIRING:
 
 const OTHER_BASE_RULES = `SERVICES, PARTIES, & OTHER:
 - Max Items: Maximum 3 items allowed in an Other ad.
-- Containers: Keep brand names (e.g. "Progen container"), NEVER "cases/crates". Paint cans: NEVER "spray cans".
-- Fruits/Vegetables: Append the category (e.g., "pineapple fruits", "cabbage vegetables").
-- Mining Resources: "copper", "an emerald", "a ruby", "a diamond", "obsidian", "a magma stone".
-- License plates: "license plate (1ABC234)". Custom: "custom license plate".
-- Sound Effects: If exactly 1: "spatial sound effect ([Name])". If multiple: "2 spatial sound effects" (do NOT mention names).
-- Other Item Nouns: "Biospark", "automatic drill/sawmill/rod/oil well/watering can", "low/medium/high/max quality inventory", "battery", "Christmas key(s)", "Little/Big gift", "GrandPro BodyCam", "hookah", "milk", "pet food", "repair kit", "solar panel", "SIM card №", "Treasure Map", "video card", "wires", "sponge".
+- Word Replacements: change "extras" to "of type".
+- Backpack skins: "backpack skin(s)". Batteries: "battery(ies)". Biospark: "Biospark(s)".
+- Chargers: "charger(s)". Canisters: "premium fuel canister(s)", "fuel canister(s)".
+- Christmas: "Christmas key(s)", "Christmas copper", "Christmas timber", "Christmas perch", "Christmas seed(s)", "Christmas lollipop(s)".
+- Gifts: "New years gift(s)", "Little gift(s)", "Big gift(s)", "Opened gift(s)".
+- Statues: "Dirty Statue(s)", "Purified Statue(s)". Drawings: "Drawing(s)".
+- Fishing rods / Pickaxes: "[low/medium/high/max/advanced] quality fishing rod" or "pickaxe".
+- Fish: "perch", "carp", "salmon", "trout", "megalodon", "ray", "orca", "humpback whale".
+- Fruits/Vegetables: Append category (e.g. "pineapple fruits", "cabbage vegetables"). Fruits: mandarin, pumpkin, strawberry, pineapple. Vegetables: cabbage.
+- Fireworks: "firework(s)". GrandPro BodyCam: "GrandPro BodyCam". Fuel for resource extraction: "fuel for resource extraction".
+- Letters: "letter \\"G\\"", "letters".
+- License plates: "license plate (1ABC234)". Custom: "custom license plate(s)".
+- Mining Resources: "copper", "an emerald"/"emeralds", "a ruby"/"rubies", "a diamond"/"diamonds", "obsidian", "a magma stone"/"magma stones".
+- Resource barrels: "solar barrel(s)", "gasoline barrel(s)", "kerosene barrel(s)".
+- Materials/Resources: "sand", "snow", "scrap metal", "top quality metal", "thread(s)", "timber", "token(s)", "tonic treat(s)", "Treasure Map(s)", "video card(s)", "wires".
+- Miscellaneous: "automatic [drill/sawmill/rod/oil well/watering can]", "[low/medium/high/max] quality inventory", "dice", "hookah", "Leash", "milk", "mushroom(s)" (NOT tincture soup), "paint can(s)" (never spray cans), "pearl(s)", "pet food", "repair kit(s)", "solar panel(s)", "SIM card № [number]", "sponge(s)", "[small/large] inflatable mattress(es) of type [X]".
+- Containers: Keep exact brand names (e.g. "Progen container"), NEVER "cases/crates".
+- Animated Items: "Fire Ring", "Lightning Charge", etc.
+- Spatial Sound Effects: If exactly 1: "spatial sound effect ([Name])". If multiple: "2 spatial sound effects" (do NOT mention names).
 
 BEACH MARKET:
-- Format: "Selling [Item] at the beach market shop №X. Price: $X."
-- If no price is given, do NOT add "Price: Negotiable". Just end with a period.
-- MAX 1 item name can be mentioned. If multiple items are listed, replace them all with "various items".`;
+- Format: "Selling [Item] at the beach market shop №X. Price: $X." (Do NOT add Negotiable).
+- MAX 1 item name mentioned. If multiple, replace with "various items".
+- Use "for good prices" instead of "cheap".`;
 
 const PETS_RULES = `PETS:
-- Caged pets use "cage with a [Pet Name]" (e.g., "cage with a Panda"). Shoulder pets use "[Name] on shoulder pet" (e.g., "six tailed fox on shoulder pet").`;
+- Caged pets: "cage with a [Pet Name]". Allowed: Border Collie, Cat, Cougar, Cyberdog, Husky, Panther, Pig, Poodle, Monkey, Pug, Christmas Elf, Santa Claus, Fancy bear, Cute Hippo, Mr Candy Cane, Futuristic Friend, New years Husky, Rabbit, Rat, Retriever, Robobeast, Rooster, Puma, Rottweiler, Westie, Kitty Bunny, Duckling, Panda, Lion Cub, Mini Robot, Cosmodog, Easter Bunny. Example: "cage with a Panda".
+- Shoulder pets: "[Name] on shoulder pet". Allowed: six tailed fox, hamster, strong chicken, owl, flying bear, toothless dragon, leon brawl, lovely bird egg, Mr. Robot friend, el primo corazon brawl, black voron.`;
 
 const JUICES_RULES = `JUICES:
-- Juices: "attack juice", "protection juice", "juice on becoming an animal", "juice for double the payment", "fast running juice".`;
+- Juices: "attack juice", "protection juice", "endurance juice", "25% protection juice", "riding juice", "power juice", "immunity juice", "fast running juice", "juice on becoming an animal", "juice for double the payment".`;
 
 const TUNING_RULES = `TUNING PARTS:
-- Tuning parts grammar: "[quality] quality [type] tuning" (e.g., "high quality engine tuning"). If multiple of the same quality: "high quality tires and suspension tunings".`;
+- Grammar: "[quality] quality [type] tuning" (types: engine, brakes, suspension, tires, transmission).
+- 1 part: "high quality engine tuning".
+- 2+ of SAME quality: "high quality tires and suspension tunings".
+- 3 parts of DIFFERENT qualities: "high quality transmission, medium quality tires and low quality suspension tunings".
+- 2 same quality + 1 different: "medium quality transmission tuning and high quality tires and suspension tunings".
+- If no specific parts, use: "high quality tuning parts".`;
 
 const CLOTHING_RULES = `CLOTHING:
 - Clothing Order: [color] [luminous] [item name] [type] [gender]. Ex: "black luminous Keezy Boost shoes of type 5 for men".`;
 
-const SERVICES_RULES = `SERVICES & PARTIES:
+const SERVICES_RULES = `SERVICES, PARTIES & ALLIANCES:
 - Professionals/Services: "Looking for a lawyer.", "Looking for a personal driver.", "Looking for a professional dancer.", "Looking for a professional singer.", "Looking for a DJ."
-- Families & Owners: "Looking for an alliance.", "Looking for a [Business] owner."
-- Poker/Dice: "Looking to play poker/dice." Suffix MUST be "Bet: $X" (not Price). Max bet is $10 Million. If over $10 Million or no bet is given, use "Bet: Negotiable."
-- Parties & Events: "Looking for a party.", "Party at [Location].", "Wedding at Church for [Names] at [Time].", "Car meet at [Location].", "[Brand] exclusive car meet at [Location]."`;
+- Weddings: "Wedding at Church.", "Wedding at Church for [Names] at [Time]."
+- Events/Meets: "Car meet at [Location].", "[Brand] exclusive car meet at [Location]."
+- Parties: "Looking for a party.", "Party at [Location].", "Pool party at [Location]."
+  Allowed Party Locations: Houses/apartment, The beach, The yacht, Bahama Mamas Bar, Tequi-la-la Bar, Stadium, Diamond Resort Bar (which is casino), Arena, Raton Canyon, Vanilla Unicorn Bar, Hotel Spa Bar.
+- Poker/Dice: "Looking to play poker/dice. Bet: $X" (not Price). Max bet is $10 Million. If over $10 Million or no bet is given, use "Bet: Negotiable."
+- Families & Owners: "Looking for an alliance.", "Looking for a [Business] owner." (e.g. "Looking for a 24/7 Store owner.")`;
 
-const TICKETS_RULES = `TICKETS:
-- Tickets/Passes: "Grand ticket" (not rp ticket), "regular/rare lottery ticket", "Cayo Perico ticket", "Resource Miners ticket", "Secret ticket fragment", "Prime with 30 days", "Prime Platinum with 15 days".`;
+const TICKETS_RULES = `TICKETS & PASSES:
+- Tickets: "Grand ticket", "regular lottery ticket", "rare lottery ticket", "flame and water lottery ticket", "Cayo Perico ticket", "Car ticket", "Secret ticket fragment", "Secret ticket", "Royal Artifacts lottery ticket", "Resource Miners ticket".
+- Prime: "Prime with 30 days". Prime Platinum: "Prime Platinum", "Prime Platinum with 15 days".`;
 
 function guessCategory(input) {
   const text = input.toLowerCase();
@@ -186,8 +209,8 @@ function guessCategory(input) {
 }
 
 const PLACES_RULES = `PLACES CAPITALIZATION:
-- Official (uppercase): Vinewood Hills, Rockford Hills, Richman, Sandy Shores, Paleto Bay, Postal, Hospital, Capitol, Fire Station, Auto Fair, Bahama Mamas Bar, Tequi-la-la Bar, FIB, Hotel Spa Bar, Pacific Bluffs Country Club, Diamond Resort Bar, Vanilla Unicorn Bar, Church, Stock Exchange, Stadium, Chumash, Lifeinvader, Del Perro Pier, Del Perro Beach, Cayo Perico Island, Hotel, Raton Canyon, School, SAHP, Mirror Park. (Use "in/near [Place]").
-- Unofficial (lowercase): airport, autosalon, beach, beach market, ghetto, post office, train station, yacht. (Always include "the" e.g., "at the beach", "near the beach market").`;
+- Official (uppercase): Vinewood Hills, Rockford Hills, Richman, Sandy Shores, Paleto Bay, Postal, Hospital, Capitol, Fire Station, Auto Fair, Bahama Mamas Bar, Tequi-la-la Bar, FIB, Hotel Spa Bar, Pacific Bluffs Country Club, Diamond Resort Bar (Casino Restaurant), Vanilla Unicorn Bar, Church, Stock Exchange, Stadium, Chumash, Lifeinvader, Del Perro Pier, Del Perro Beach, Cayo Perico Island, Hotel, Raton Canyon, School, SAHP, Mirror Park. (Use "in/near [Place]").
+- Unofficial (lowercase): airport, autosalon, beach, beach market, ghetto, post office, train station, yacht. (Always include "the" e.g., "at the beach", "near the beach market", "in the city").`;
 
 let currentTokenIndex = 0;
 
