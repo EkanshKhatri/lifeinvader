@@ -605,7 +605,8 @@ function App() {
          let n = name.trim();
          if (!n) return '';
          if (itemColor && itemColor.trim()) n = `${itemColor.trim().toLowerCase()} ${n}`;
-         if (quality) n = `${quality.toLowerCase()} quality ${n}`;
+         const validQualityItems = ['engine tuning', 'transmission tuning', 'suspension tuning', 'brakes tuning', 'tires tuning', 'fishing rod'];
+         if (quality && validQualityItems.includes(name.trim().toLowerCase())) n = `${quality.toLowerCase()} quality ${n}`;
 
          let plural = n;
          if (n.endsWith('y') && !n.endsWith('ey')) plural = n.slice(0, -1) + 'ies';
