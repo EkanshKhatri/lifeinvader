@@ -610,7 +610,7 @@ function App() {
          let plural = n;
          if (n.endsWith('y') && !n.endsWith('ey')) plural = n.slice(0, -1) + 'ies';
          else if (n.endsWith('s')) plural = n;
-         else if (n.toLowerCase().includes('fish') || n === 'snow' || n === 'sand' || n === 'timber' || n === 'milk' || n.includes('inventory')) plural = n;
+         else if (n.toLowerCase().includes('fish') || n === 'snow' || n === 'sand' || n === 'timber' || n === 'milk' || n.includes('inventory') || n.toLowerCase() === 'scrap metal' || n.toLowerCase() === 'top quality metal' || n.toLowerCase().includes('top quality')) plural = n;
          else plural = n + 's';
 
          let typeSuffix = '';
