@@ -1993,15 +1993,17 @@ function App() {
                     />
                     <label htmlFor="bulkCheck" style={{ marginBottom: 0 }}>Bulk</label>
                   </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                    <input 
-                      type="checkbox" 
-                      id="eachCheck"
-                      checked={otherEach}
-                      onChange={(e) => setOtherEach(e.target.checked)}
-                    />
-                    <label htmlFor="eachCheck" style={{ marginBottom: 0 }}>Each</label>
-                  </div>
+                  {(otherItem2.trim() !== '' || otherItem3.trim() !== '' || (otherQty1.trim() !== '1' && otherQty1.trim() !== '')) && (
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                      <input 
+                        type="checkbox" 
+                        id="eachCheck"
+                        checked={otherEach}
+                        onChange={(e) => setOtherEach(e.target.checked)}
+                      />
+                      <label htmlFor="eachCheck" style={{ marginBottom: 0 }}>Each</label>
+                    </div>
+                  )}
                   {(otherItem2.trim() !== '' || otherItem3.trim() !== '') && (
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                       <input 
