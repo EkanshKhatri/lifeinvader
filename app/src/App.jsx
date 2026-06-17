@@ -632,7 +632,9 @@ function App() {
              return `${n}${typeSuffix}`;
          }
          
-         if (q === '1') return `1 ${n}${typeSuffix}`;
+         if (q === '1') {
+             return /^[aeiou]/i.test(n) ? `an ${n}${typeSuffix}` : `a ${n}${typeSuffix}`;
+         }
          return `${q} ${plural}${typeSuffix}`;
       };
 
