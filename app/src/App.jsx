@@ -1971,15 +1971,17 @@ function App() {
                 </datalist>
 
                 <div className="form-group" style={{ flexDirection: 'row', alignItems: 'center', gap: '1.5rem', flexWrap: 'wrap' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                    <input 
-                      type="checkbox" 
-                      id="beachMarket"
-                      checked={otherBeachMarket}
-                      onChange={(e) => setOtherBeachMarket(e.target.checked)}
-                    />
-                    <label htmlFor="beachMarket" style={{ marginBottom: 0 }}>Beach Market</label>
-                  </div>
+                  {formAction !== 'Buy' && (
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                      <input 
+                        type="checkbox" 
+                        id="beachMarket"
+                        checked={otherBeachMarket}
+                        onChange={(e) => setOtherBeachMarket(e.target.checked)}
+                      />
+                      <label htmlFor="beachMarket" style={{ marginBottom: 0 }}>Beach Market</label>
+                    </div>
+                  )}
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                     <input 
                       type="checkbox" 
