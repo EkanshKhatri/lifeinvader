@@ -633,7 +633,11 @@ function App() {
 
          if (isBulk) return `${plural}${typeSuffix}${simStr}`;
 
-         if (!q || q === '1') {
+         if (!q) {
+             return `${n}${typeSuffix}${simStr}`;
+         }
+
+         if (q === '1') {
              const isClothing = clothingItems.some(c => c.toLowerCase() === name.trim().toLowerCase());
              if (isClothing) return `${n}${typeSuffix}${simStr}`;
              
