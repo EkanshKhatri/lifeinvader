@@ -109,6 +109,9 @@ function App() {
   const [otherItem1Color, setOtherItem1Color] = useState('');
   const [otherItem2Color, setOtherItem2Color] = useState('');
   const [otherItem3Color, setOtherItem3Color] = useState('');
+  const [otherItem1Sim, setOtherItem1Sim] = useState('');
+  const [otherItem2Sim, setOtherItem2Sim] = useState('');
+  const [otherItem3Sim, setOtherItem3Sim] = useState('');
 
   const categories = ['Auto', 'Real Estate', 'Business', 'Work', 'Dating', 'Other'];
 
@@ -600,13 +603,18 @@ function App() {
     }
 
     if (otherType === 'Items') {
-      const formatItem = (qty, name, quality, isBulk, itemType, itemColor) => {
+      const formatItem = (qty, name, quality, isBulk, itemType, itemColor, itemSim) => {
          const q = qty.trim();
          let n = name.trim();
          if (!n) return '';
          if (itemColor && itemColor.trim()) n = `${itemColor.trim().toLowerCase()} ${n}`;
          const validQualityItems = ['engine tuning', 'transmission tuning', 'suspension tuning', 'brakes tuning', 'tires tuning', 'fishing rod'];
          if (quality && validQualityItems.includes(name.trim().toLowerCase())) n = `${quality.toLowerCase()} quality ${n}`;
+
+         let simStr = '';
+         if (name.trim().toLowerCase() === 'sim card' && itemSim && itemSim.trim()) {
+             simStr = ` № ${itemSim.trim()}`;
+         }
 
          let plural = n;
          if (n.endsWith('y') && !n.endsWith('ey')) plural = n.slice(0, -1) + 'ies';
@@ -623,26 +631,26 @@ function App() {
             }
          }
 
-         if (isBulk) return `${plural}${typeSuffix}`;
+         if (isBulk) return `${plural}${typeSuffix}${simStr}`;
 
          if (!q || q === '1') {
              const isClothing = clothingItems.some(c => c.toLowerCase() === name.trim().toLowerCase());
-             if (isClothing) return `${n}${typeSuffix}`;
+             if (isClothing) return `${n}${typeSuffix}${simStr}`;
              
              const low = n.toLowerCase();
              // Mass nouns or plurals that shouldn't get a/an
              const noArticle = low.endsWith('s') && !low.endsWith('glass') && !low.endsWith('pass') && !low.endsWith('canvas') || low.includes('fish') || low === 'snow' || low === 'sand' || low === 'timber' || low === 'milk' || low.includes('inventory') || low.includes('scrap metal') || low.includes('top quality');
              
-             if (noArticle) return `${n}${typeSuffix}`;
+             if (noArticle) return `${n}${typeSuffix}${simStr}`;
              
-             return /^[aeiou]/i.test(n) ? `an ${n}${typeSuffix}` : `a ${n}${typeSuffix}`;
+             return /^[aeiou]/i.test(n) ? `an ${n}${typeSuffix}${simStr}` : `a ${n}${typeSuffix}${simStr}`;
          }
-         return `${q} ${plural}${typeSuffix}`;
+         return `${q} ${plural}${typeSuffix}${simStr}`;
       };
 
-      const item1Str = formatItem(otherQty1, otherItem1, otherItem1Quality, otherBulk, otherItem1Type, otherItem1Color);
-      const item2Str = formatItem(otherQty2, otherItem2, otherItem2Quality, otherBulk, otherItem2Type, otherItem2Color);
-      const item3Str = formatItem(otherQty3, otherItem3, otherItem3Quality, otherBulk, otherItem3Type, otherItem3Color);
+      const item1Str = formatItem(otherQty1, otherItem1, otherItem1Quality, otherBulk, otherItem1Type, otherItem1Color, otherItem1Sim);
+      const item2Str = formatItem(otherQty2, otherItem2, otherItem2Quality, otherBulk, otherItem2Type, otherItem2Color, otherItem2Sim);
+      const item3Str = formatItem(otherQty3, otherItem3, otherItem3Quality, otherBulk, otherItem3Type, otherItem3Color, otherItem3Sim);
 
       const items = [item1Str, item2Str, item3Str].filter(i => i !== '');
       if (items.length === 0) return '';
@@ -807,7 +815,7 @@ function App() {
     otherWeddingNames, otherWeddingTime, otherCarBrand, otherGameType, otherGameBet, otherPrice1, otherPrice2, otherPrice3,
     otherQty1, otherQty2, otherQty3, otherEach, otherRespectively, otherPrice1Unit, otherPrice2Unit, otherPrice3Unit,
     otherItem1Quality, otherItem2Quality, otherItem3Quality, otherItem1Type, otherItem2Type, otherItem3Type,
-    otherItem1Color, otherItem2Color, otherItem3Color
+    otherItem1Color, otherItem2Color, otherItem3Color, otherItem1Sim, otherItem2Sim, otherItem3Sim
   ]);
 
 
@@ -1806,6 +1814,12 @@ function App() {
                         <input type="text" className="search-input" placeholder="e.g., 1, 2, Sport" value={otherItem1Type} onChange={(e) => setOtherItem1Type(e.target.value)} />
                       </div>
                     )}
+                    {otherItem1.trim().toLowerCase() === 'sim card' && (
+                      <div className="form-group" style={{ flex: 1, marginBottom: 0 }}>
+                        <label>SIM Number</label>
+                        <input type="text" className="search-input" placeholder="e.g., 77-77-777" value={otherItem1Sim} onChange={(e) => setOtherItem1Sim(e.target.value)} />
+                      </div>
+                    )}
                     {clothingItems.map(c => c.toLowerCase()).includes(otherItem1.trim().toLowerCase()) && (
                       <div className="form-group" style={{ flex: 1, marginBottom: 0 }}>
                         <label>Color</label>
@@ -1876,6 +1890,12 @@ function App() {
                         <input type="text" className="search-input" placeholder="e.g., 1, 2, Sport" value={otherItem2Type} onChange={(e) => setOtherItem2Type(e.target.value)} />
                       </div>
                     )}
+                    {otherItem2.trim().toLowerCase() === 'sim card' && (
+                      <div className="form-group" style={{ flex: 1, marginBottom: 0 }}>
+                        <label>SIM Number</label>
+                        <input type="text" className="search-input" placeholder="e.g., 77-77-777" value={otherItem2Sim} onChange={(e) => setOtherItem2Sim(e.target.value)} />
+                      </div>
+                    )}
                     {clothingItems.map(c => c.toLowerCase()).includes(otherItem2.trim().toLowerCase()) && (
                       <div className="form-group" style={{ flex: 1, marginBottom: 0 }}>
                         <label>Color</label>
@@ -1944,6 +1964,12 @@ function App() {
                       <div className="form-group" style={{ flex: 1, marginBottom: 0 }}>
                         <label>Type</label>
                         <input type="text" className="search-input" placeholder="e.g., 1, 2, Sport" value={otherItem3Type} onChange={(e) => setOtherItem3Type(e.target.value)} />
+                      </div>
+                    )}
+                    {otherItem3.trim().toLowerCase() === 'sim card' && (
+                      <div className="form-group" style={{ flex: 1, marginBottom: 0 }}>
+                        <label>SIM Number</label>
+                        <input type="text" className="search-input" placeholder="e.g., 77-77-777" value={otherItem3Sim} onChange={(e) => setOtherItem3Sim(e.target.value)} />
                       </div>
                     )}
                     {clothingItems.map(c => c.toLowerCase()).includes(otherItem3.trim().toLowerCase()) && (
