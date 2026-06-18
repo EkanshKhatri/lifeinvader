@@ -621,7 +621,8 @@ function App() {
 
          const invariants = [
              'dice', 'perch', 'carp', 'salmon', 'trout', 'megalodon', 'ray', 'orca', 'humpback whale',
-             'grandpro bodycam', 'fuel for resource extraction', 'milk', 'copper', 'obsidian', 'sand', 'snow', 'timber'
+             'grandpro bodycam', 'fuel for resource extraction', 'milk', 'copper', 'obsidian', 'sand', 'snow', 'timber',
+             'leash', 'prime', 'prime platinum'
          ];
          
          const isInvariant = invariants.includes(low) || low.includes('fish') || low.includes('scrap metal') || low.includes('top quality metal') || low.includes('tuning');
