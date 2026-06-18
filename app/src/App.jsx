@@ -617,10 +617,26 @@ function App() {
          }
 
          let plural = n;
-         if (n.endsWith('y') && !n.endsWith('ey')) plural = n.slice(0, -1) + 'ies';
-         else if (n.endsWith('s')) plural = n;
-         else if (n.toLowerCase().includes('fish') || n === 'snow' || n === 'sand' || n === 'timber' || n === 'milk' || n.includes('inventory') || n.toLowerCase() === 'scrap metal' || n.toLowerCase() === 'top quality metal' || n.toLowerCase().includes('top quality')) plural = n;
-         else plural = n + 's';
+         const low = n.toLowerCase();
+
+         const invariants = [
+             'dice', 'perch', 'carp', 'salmon', 'trout', 'megalodon', 'ray', 'orca', 'humpback whale',
+             'grandpro bodycam', 'fuel for resource extraction', 'milk', 'copper', 'obsidian', 'sand', 'snow', 'timber'
+         ];
+         
+         const isInvariant = invariants.includes(low) || low.includes('fish') || low.includes('scrap metal') || low.includes('top quality metal') || low.includes('tuning');
+
+         if (isInvariant) {
+             plural = n;
+         } else if (n.endsWith('y') && !n.endsWith('ey') && !n.endsWith('boy') && !n.endsWith('ray')) {
+             plural = n.slice(0, -1) + 'ies';
+         } else if (low.endsWith('ss')) {
+             plural = n + 'es';
+         } else if (n.endsWith('s')) {
+             plural = n;
+         } else {
+             plural = n + 's';
+         }
 
          let typeSuffix = '';
          if (itemType) {
@@ -644,9 +660,11 @@ function App() {
              const isClothing = clothingItems.some(c => c.toLowerCase() === name.trim().toLowerCase());
              if (isClothing) return `${n}${typeSuffix}${simStr}`;
              
-             const low = n.toLowerCase();
-             // Mass nouns or plurals that shouldn't get a/an
-             const noArticle = low.endsWith('s') && !low.endsWith('glass') && !low.endsWith('pass') && !low.endsWith('canvas') || low.includes('fish') || low === 'snow' || low === 'sand' || low === 'timber' || low === 'milk' || low.includes('inventory') || low.includes('scrap metal') || low.includes('top quality');
+             const noArticleMassNouns = [
+                 'dice', 'snow', 'sand', 'timber', 'milk', 'copper', 'obsidian', 
+                 'perch', 'carp', 'salmon', 'trout', 'megalodon', 'ray', 'orca', 'humpback whale'
+             ];
+             const noArticle = (low.endsWith('s') && !low.endsWith('ss') && !low.endsWith('canvas')) || noArticleMassNouns.includes(low) || low.includes('fish') || low.includes('inventory');
              
              if (noArticle) return `${n}${typeSuffix}${simStr}`;
              
