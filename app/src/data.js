@@ -1,3 +1,6 @@
+export const carBrands = [
+  "Albany", "Annis", "Audi", "Aston Martin", "Alfa Romeo", "Bentley", "Benefactor", "Benefactor-Benz", "Benefactor-MG", "Benefactor-Maybach", "BMW", "Bravado", "Bugatti", "Burgerfahrzeug", "Canis", "Chevrolet", "Cheval", "Coil", "Declasse", "Dewbauchee", "Dinka", "Dodge", "Enus", "Ferrari", "Ford", "Gallivanter", "Grotti", "Hijak", "Honda", "Invetero", "Jeep", "Karin", "Lamborghini", "Lampadati", "Lexus", "Maserati", "McLaren", "Mercedes-Benz", "Mitsubishi", "Nagasaki", "Nissan", "Obey", "Ocelot", "Overflod", "Pegassi", "Pfister", "Porsche", "Progen", "Rolls-Royce", "RUNE", "Schyster", "Shitzu", "Subaru", "Tesla", "Toyota", "Truffade", "Ubermacht", "Vapid", "Volkswagen", "Vulcar", "Weeny"
+];
 
 export const carsList = [
   "9F",

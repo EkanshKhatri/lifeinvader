@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { carsList, allLocations, officialLocations, unofficialLocations, familyBusinesses, generalBusinesses, sharesBusinesses, workProfessions, constructionRoles, otherItemsList, partyLocations, otherServices, clothingItems, colorsList } from './data';
+import { carBrands, carsList, allLocations, officialLocations, unofficialLocations, familyBusinesses, generalBusinesses, sharesBusinesses, workProfessions, constructionRoles, otherItemsList, partyLocations, otherServices, clothingItems, colorsList } from './data';
 import './index.css';
 
 function App() {
@@ -87,6 +87,7 @@ function App() {
   const [otherWeddingNames, setOtherWeddingNames] = useState('');
   const [otherWeddingTime, setOtherWeddingTime] = useState('');
   const [otherCarBrand, setOtherCarBrand] = useState('');
+  const [otherCarName, setOtherCarName] = useState('');
   const [otherGameType, setOtherGameType] = useState('Dice');
   const [otherGameBet, setOtherGameBet] = useState('');
   const [otherPrice1, setOtherPrice1] = useState('');
@@ -578,8 +579,14 @@ function App() {
                  meetLocStr = loc;
              }
          }
-         if (otherCarBrand) {
-             return `${otherCarBrand} exclusive car meet at ${meetLocStr}.`;
+         
+         let prefix = '';
+         if (otherCarBrand.trim() && otherCarName.trim()) prefix = `${otherCarBrand.trim()} ${otherCarName.trim()}`;
+         else if (otherCarBrand.trim()) prefix = otherCarBrand.trim();
+         else if (otherCarName.trim()) prefix = otherCarName.trim();
+
+         if (prefix) {
+             return `${prefix} exclusive car meet at ${meetLocStr}.`;
          }
          return `Car meet at ${meetLocStr}.`;
       }
@@ -838,7 +845,7 @@ function App() {
     datingType,
     otherType, otherItem1, otherItem2, otherItem3, otherBeachMarket, otherBeachShop, otherBulk,
     otherServiceType, otherBusinessOwner, otherEventType, otherEventLocation, otherPartyHouseNum,
-    otherWeddingNames, otherWeddingTime, otherCarBrand, otherGameType, otherGameBet, otherPrice1, otherPrice2, otherPrice3,
+    otherWeddingNames, otherWeddingTime, otherCarBrand, otherCarName, otherGameType, otherGameBet, otherPrice1, otherPrice2, otherPrice3,
     otherQty1, otherQty2, otherQty3, otherEach, otherRespectively, otherPrice1Unit, otherPrice2Unit, otherPrice3Unit,
     otherItem1Quality, otherItem2Quality, otherItem3Quality, otherItem1Type, otherItem2Type, otherItem3Type,
     otherItem1Color, otherItem2Color, otherItem3Color, otherItem1Sim, otherItem2Sim, otherItem3Sim
@@ -914,6 +921,7 @@ function App() {
     setOtherWeddingNames('');
     setOtherWeddingTime('');
     setOtherCarBrand('');
+    setOtherCarName('');
     setOtherGameType('Dice');
     setOtherGameBet('');
     setOtherPrice1('');
@@ -968,6 +976,7 @@ function App() {
     setOtherWeddingNames('');
     setOtherWeddingTime('');
     setOtherCarBrand('');
+    setOtherCarName('');
     setOtherGameType('Dice');
     setOtherGameBet('');
     setOtherPrice1('');
@@ -2173,15 +2182,32 @@ function App() {
                   </>
                 )}
                 {otherEventType === 'Car meet' && (
-                  <div className="form-group">
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                     <label>Car Brand (Optional)</label>
-                    <input
-                      type="text"
+                    <input 
+                      type="text" 
+                      list="carBrandOptions"
                       className="search-input"
-                      placeholder="e.g., Truffade"
+                      placeholder="e.g. Benefactor"
                       value={otherCarBrand}
                       onChange={(e) => setOtherCarBrand(e.target.value)}
                     />
+                    <datalist id="carBrandOptions">
+                      {carBrands.map(b => <option key={b} value={b} />)}
+                    </datalist>
+
+                    <label>Car Name (Optional)</label>
+                    <input 
+                      type="text" 
+                      list="carNameOptions"
+                      className="search-input"
+                      placeholder="e.g. Zentorno"
+                      value={otherCarName}
+                      onChange={(e) => setOtherCarName(e.target.value)}
+                    />
+                    <datalist id="carNameOptions">
+                      {carsList.map(c => <option key={c} value={c} />)}
+                    </datalist>
                   </div>
                 )}
                 {otherEventType !== 'Wedding' && (
