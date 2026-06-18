@@ -630,7 +630,7 @@ function App() {
              plural = n;
          } else if (n.endsWith('y') && !n.endsWith('ey') && !n.endsWith('boy') && !n.endsWith('ray')) {
              plural = n.slice(0, -1) + 'ies';
-         } else if (low.endsWith('ss')) {
+         } else if (low.endsWith('ss') || low.endsWith('sh') || low.endsWith('ch') || low.endsWith('x')) {
              plural = n + 'es';
          } else if (n.endsWith('s')) {
              plural = n;
