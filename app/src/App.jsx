@@ -2048,7 +2048,7 @@ function App() {
                 </datalist>
 
                 <div className="form-group" style={{ flexDirection: 'row', alignItems: 'center', gap: '1.5rem', flexWrap: 'wrap' }}>
-                  {formAction === 'Trade' && (
+                  {formAction !== 'Buy' && (
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                       <input 
                         type="checkbox" 
@@ -2059,7 +2059,7 @@ function App() {
                       <label htmlFor="beachMarket" style={{ marginBottom: 0 }}>Beach Market</label>
                     </div>
                   )}
-                  {formAction === 'Trade' && ![otherItem1, otherItem2, otherItem3].some(item => clothingItems.map(c => c.toLowerCase()).includes(item.trim().toLowerCase())) && 
+                  {![otherItem1, otherItem2, otherItem3].some(item => clothingItems.map(c => c.toLowerCase()).includes(item.trim().toLowerCase())) && 
                    ![ { name: otherItem1, sim: otherItem1Sim }, { name: otherItem2, sim: otherItem2Sim }, { name: otherItem3, sim: otherItem3Sim } ].some(item => item.name.trim().toLowerCase() === 'sim card' && item.sim.trim() !== '') && (
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                       <input 
