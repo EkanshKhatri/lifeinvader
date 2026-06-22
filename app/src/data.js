@@ -940,7 +940,7 @@ export const clothingItems = [
 export const otherItemsList = [
   "automatic drill", "automatic sawmill", "automatic rod", "automatic oil well", "automatic watering can",
   "low quality inventory", "medium quality inventory", "high quality inventory", "max quality inventory",
-  "backpack skin", "battery", "batteries", "Biospark", "premium fuel canister", "fuel canister", "charger",
+  "backpack skin", "battery", "Biospark", "premium fuel canister", "fuel canister", "charger",
   "Christmas key", "Christmas copper", "Christmas timber", "Christmas perch", "Christmas seed", "Christmas lollipop",
   "New years gift", "Little gift", "Big gift", "Opened gift", "Drawing", "Dirty Statue", "Purified Statue",
   "valuable container", "desert scarf mask container", "biker container", "Brand T-shirts 2 container",
@@ -970,7 +970,7 @@ export const otherItemsList = [
   "Prime with 3 days", "Prime with 5 days", "Prime with 7 days", "Prime with 10 days", "Prime with 15 days", "Prime with 30 days",
   "Prime Platinum with 7 days", "Prime Platinum with 10 days", "Prime Platinum with 15 days", "Prime Platinum with 21 days", "Prime Platinum with 30 days", "Prime Platinum with 60 days",
   "repair kit", "solar barrel", "gasoline barrel", "kerosene barrel", "Resource Miners ticket",
-  "pineapple seed", "cabbage seed", "pumpkin seed", "mandarin seed", "mushroom seed", "seed", "seeds", "sand", "snow",
+  "pineapple seed", "cabbage seed", "pumpkin seed", "mandarin seed", "mushroom seed", "seed", "sand", "snow",
   "solar panel", "SIM card", "scrap metal", "top quality metal", "thread", "timber", "token", "tonic treat",
   "Treasure Map", "video card", "wires", "sponge",
   "small inflatable mattress", "large inflatable mattress",

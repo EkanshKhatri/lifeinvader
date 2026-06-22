@@ -1816,7 +1816,7 @@ function App() {
                         placeholder="e.g., battery"
                         value={otherItem1}
                         onChange={(e) => setOtherItem1(e.target.value)}
-                        list={otherItem1.length > 0 ? "otherItemsList" : ""}
+                        list={otherItem1.length > 0 ? "otherItemsList1" : ""}
                       />
                       {['engine tuning', 'transmission tuning', 'suspension tuning', 'brakes tuning', 'tires tuning'].includes(otherItem1.trim().toLowerCase()) && (
                          <div className="action-toggles" style={{ marginTop: '0.5rem', flexWrap: 'wrap' }}>
@@ -1892,7 +1892,7 @@ function App() {
                         placeholder="e.g., fuel canister"
                         value={otherItem2}
                         onChange={(e) => setOtherItem2(e.target.value)}
-                        list={otherItem2.length > 0 ? "otherItemsList" : ""}
+                        list={otherItem2.length > 0 ? "otherItemsList2" : ""}
                       />
                       {['engine tuning', 'transmission tuning', 'suspension tuning', 'brakes tuning', 'tires tuning'].includes(otherItem2.trim().toLowerCase()) && (
                          <div className="action-toggles" style={{ marginTop: '0.5rem', flexWrap: 'wrap' }}>
@@ -1968,7 +1968,7 @@ function App() {
                         placeholder="e.g., brakes tuning"
                         value={otherItem3}
                         onChange={(e) => setOtherItem3(e.target.value)}
-                        list={otherItem3.length > 0 ? "otherItemsList" : ""}
+                        list={otherItem3.length > 0 ? "otherItemsList3" : ""}
                       />
                       {['engine tuning', 'transmission tuning', 'suspension tuning', 'brakes tuning', 'tires tuning'].includes(otherItem3.trim().toLowerCase()) && (
                          <div className="action-toggles" style={{ marginTop: '0.5rem', flexWrap: 'wrap' }}>
@@ -2037,8 +2037,14 @@ function App() {
                 <datalist id="colorsList">
                   {colorsList.map(c => <option key={c} value={c} />)}
                 </datalist>
-                <datalist id="otherItemsList">
-                  {otherItemsList.map(item => <option key={item} value={item} />)}
+                <datalist id="otherItemsList1">
+                  {otherItemsList.filter(item => item.toLowerCase() !== otherItem2.trim().toLowerCase() && item.toLowerCase() !== otherItem3.trim().toLowerCase()).map(item => <option key={item} value={item} />)}
+                </datalist>
+                <datalist id="otherItemsList2">
+                  {otherItemsList.filter(item => item.toLowerCase() !== otherItem1.trim().toLowerCase() && item.toLowerCase() !== otherItem3.trim().toLowerCase()).map(item => <option key={item} value={item} />)}
+                </datalist>
+                <datalist id="otherItemsList3">
+                  {otherItemsList.filter(item => item.toLowerCase() !== otherItem1.trim().toLowerCase() && item.toLowerCase() !== otherItem2.trim().toLowerCase()).map(item => <option key={item} value={item} />)}
                 </datalist>
 
                 <div className="form-group" style={{ flexDirection: 'row', alignItems: 'center', gap: '1.5rem', flexWrap: 'wrap' }}>
