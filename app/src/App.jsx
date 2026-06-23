@@ -611,7 +611,10 @@ function App() {
 
     if (otherType === 'Items') {
       const formatItem = (qty, name, quality, isBulk, itemType, itemColor, itemSim, itemEach) => {
-         const q = qty.trim();
+         let q = qty.trim();
+         if (['sim card', 'license plate', 'custom license plate'].includes(name.trim().toLowerCase()) && itemSim && itemSim.trim()) {
+             q = '';
+         }
          let n = name.trim();
          if (!n) return '';
          if (itemColor && itemColor.trim()) n = `${itemColor.trim().toLowerCase()} ${n}`;
@@ -1836,16 +1839,18 @@ function App() {
                          </div>
                       )}
                     </div>
-                    <div className="form-group" style={{ flex: 1, marginBottom: 0 }}>
-                      <label>Qty 1</label>
-                      <input
-                        type="text"
-                        className="search-input"
-                        placeholder="e.g., 3"
-                        value={otherQty1}
-                        onChange={(e) => setOtherQty1(e.target.value)}
-                      />
-                    </div>
+                    {!(['sim card', 'license plate', 'custom license plate'].includes(otherItem1.trim().toLowerCase()) && otherItem1Sim.trim() !== '') && (
+                      <div className="form-group" style={{ flex: 1, marginBottom: 0 }}>
+                        <label>Qty 1</label>
+                        <input
+                          type="text"
+                          className="search-input"
+                          placeholder="e.g., 3"
+                          value={otherQty1}
+                          onChange={(e) => setOtherQty1(e.target.value)}
+                        />
+                      </div>
+                    )}
                     {otherItem1.trim().toLowerCase() === 'luminous wheels' && (
                       <div className="form-group" style={{ flex: 1, marginBottom: 0 }}>
                         <label>Type</label>
@@ -1918,16 +1923,18 @@ function App() {
                          </div>
                       )}
                     </div>
-                    <div className="form-group" style={{ flex: 1, marginBottom: 0 }}>
-                      <label>Qty 2</label>
-                      <input
-                        type="text"
-                        className="search-input"
-                        placeholder="e.g., 10"
-                        value={otherQty2}
-                        onChange={(e) => setOtherQty2(e.target.value)}
-                      />
-                    </div>
+                    {!(['sim card', 'license plate', 'custom license plate'].includes(otherItem2.trim().toLowerCase()) && otherItem2Sim.trim() !== '') && (
+                      <div className="form-group" style={{ flex: 1, marginBottom: 0 }}>
+                        <label>Qty 2</label>
+                        <input
+                          type="text"
+                          className="search-input"
+                          placeholder="e.g., 10"
+                          value={otherQty2}
+                          onChange={(e) => setOtherQty2(e.target.value)}
+                        />
+                      </div>
+                    )}
                     {otherItem2.trim().toLowerCase() === 'luminous wheels' && (
                       <div className="form-group" style={{ flex: 1, marginBottom: 0 }}>
                         <label>Type</label>
@@ -2000,16 +2007,18 @@ function App() {
                          </div>
                       )}
                     </div>
-                    <div className="form-group" style={{ flex: 1, marginBottom: 0 }}>
-                      <label>Qty 3</label>
-                      <input
-                        type="text"
-                        className="search-input"
-                        placeholder="e.g., 50"
-                        value={otherQty3}
-                        onChange={(e) => setOtherQty3(e.target.value)}
-                      />
-                    </div>
+                    {!(['sim card', 'license plate', 'custom license plate'].includes(otherItem3.trim().toLowerCase()) && otherItem3Sim.trim() !== '') && (
+                      <div className="form-group" style={{ flex: 1, marginBottom: 0 }}>
+                        <label>Qty 3</label>
+                        <input
+                          type="text"
+                          className="search-input"
+                          placeholder="e.g., 50"
+                          value={otherQty3}
+                          onChange={(e) => setOtherQty3(e.target.value)}
+                        />
+                      </div>
+                    )}
                     {otherItem3.trim().toLowerCase() === 'luminous wheels' && (
                       <div className="form-group" style={{ flex: 1, marginBottom: 0 }}>
                         <label>Type</label>
@@ -2092,7 +2101,7 @@ function App() {
                       <label htmlFor="bulkCheck" style={{ marginBottom: 0 }}>Bulk</label>
                     </div>
                   )}
-                  {(otherItem2.trim() !== '' || otherItem3.trim() !== '' || otherQty1.trim() !== '1') && (
+                  {(![ { name: otherItem1, sim: otherItem1Sim }, { name: otherItem2, sim: otherItem2Sim }, { name: otherItem3, sim: otherItem3Sim } ].some(item => ['sim card', 'license plate', 'custom license plate'].includes(item.name.trim().toLowerCase()) && item.sim.trim() !== '')) && (otherItem2.trim() !== '' || otherItem3.trim() !== '' || (otherQty1.trim() !== '' && otherQty1.trim() !== '1')) && (
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                       <input 
                         type="checkbox" 
