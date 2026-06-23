@@ -1856,10 +1856,16 @@ function App() {
                       </div>
                     )}
                     {clothingItems.map(c => c.toLowerCase()).includes(otherItem1.trim().toLowerCase()) && (
-                      <div className="form-group" style={{ flex: 1, marginBottom: 0 }}>
-                        <label>Color</label>
-                        <input type="text" className="search-input" list="colorsList" placeholder="e.g., red, neon" value={otherItem1Color} onChange={(e) => setOtherItem1Color(e.target.value)} />
-                      </div>
+                      <>
+                        <div className="form-group" style={{ flex: 1, marginBottom: 0 }}>
+                          <label>Color</label>
+                          <input type="text" className="search-input" list="colorsList" placeholder="e.g., red, neon" value={otherItem1Color} onChange={(e) => setOtherItem1Color(e.target.value)} />
+                        </div>
+                        <div className="form-group" style={{ flex: 1, marginBottom: 0 }}>
+                          <label>Type</label>
+                          <input type="text" className="search-input" placeholder="e.g., 55" value={otherItem1Type} onChange={(e) => setOtherItem1Type(e.target.value)} />
+                        </div>
+                      </>
                     )}
                     <div className="form-group" style={{ flex: 1, marginBottom: 0 }}>
                       <label>{formAction === 'Buy' ? 'Budget' : 'Price'} 1</label>
@@ -1932,10 +1938,16 @@ function App() {
                       </div>
                     )}
                     {clothingItems.map(c => c.toLowerCase()).includes(otherItem2.trim().toLowerCase()) && (
-                      <div className="form-group" style={{ flex: 1, marginBottom: 0 }}>
-                        <label>Color</label>
-                        <input type="text" className="search-input" list="colorsList" placeholder="e.g., red, neon" value={otherItem2Color} onChange={(e) => setOtherItem2Color(e.target.value)} />
-                      </div>
+                      <>
+                        <div className="form-group" style={{ flex: 1, marginBottom: 0 }}>
+                          <label>Color</label>
+                          <input type="text" className="search-input" list="colorsList" placeholder="e.g., red, neon" value={otherItem2Color} onChange={(e) => setOtherItem2Color(e.target.value)} />
+                        </div>
+                        <div className="form-group" style={{ flex: 1, marginBottom: 0 }}>
+                          <label>Type</label>
+                          <input type="text" className="search-input" placeholder="e.g., 55" value={otherItem2Type} onChange={(e) => setOtherItem2Type(e.target.value)} />
+                        </div>
+                      </>
                     )}
                     <div className="form-group" style={{ flex: 1, marginBottom: 0 }}>
                       <label>{formAction === 'Buy' ? 'Budget' : 'Price'} 2</label>
@@ -2008,10 +2020,16 @@ function App() {
                       </div>
                     )}
                     {clothingItems.map(c => c.toLowerCase()).includes(otherItem3.trim().toLowerCase()) && (
-                      <div className="form-group" style={{ flex: 1, marginBottom: 0 }}>
-                        <label>Color</label>
-                        <input type="text" className="search-input" list="colorsList" placeholder="e.g., red, neon" value={otherItem3Color} onChange={(e) => setOtherItem3Color(e.target.value)} />
-                      </div>
+                      <>
+                        <div className="form-group" style={{ flex: 1, marginBottom: 0 }}>
+                          <label>Color</label>
+                          <input type="text" className="search-input" list="colorsList" placeholder="e.g., red, neon" value={otherItem3Color} onChange={(e) => setOtherItem3Color(e.target.value)} />
+                        </div>
+                        <div className="form-group" style={{ flex: 1, marginBottom: 0 }}>
+                          <label>Type</label>
+                          <input type="text" className="search-input" placeholder="e.g., 55" value={otherItem3Type} onChange={(e) => setOtherItem3Type(e.target.value)} />
+                        </div>
+                      </>
                     )}
                     <div className="form-group" style={{ flex: 1, marginBottom: 0 }}>
                       <label>{formAction === 'Buy' ? 'Budget' : 'Price'} 3</label>
