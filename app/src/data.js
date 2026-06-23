@@ -961,7 +961,7 @@ export const otherItemsList = [
   "mandarin fruit", "pumpkin fruit", "strawberry fruit", "pineapple fruit", "cabbage vegetable", "firework",
   "GrandPro BodyCam", "fuel for resource extraction", "Grand ticket", "hookah",
   "attack juice", "protection juice", "endurance juice", "riding juice", "power juice", "immunity juice",
-  "juice on becoming an animal", "juice for double the payment", "fast running juice", "25% protection juice",
+  "juice on becoming an animal", "juice for double the payment", "fast running juice", "25% protection juice", "10% attack and 10% protection juice", "juice",
   "Leash", "letter G", "letter R", "letter A", "letter N", "letter D", "letters",
   "license plate", "custom license plate", "regular lottery ticket", "rare lottery ticket", "flame and water lottery ticket",
   "Cayo Perico ticket", "Car ticket", "Secret ticket fragment", "Secret ticket", "Royal Artifacts lottery ticket",
