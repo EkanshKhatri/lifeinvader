@@ -623,7 +623,7 @@ function App() {
              simStr = ` № ${itemSim.trim()}`;
          }
          if (['license plate', 'custom license plate'].includes(name.trim().toLowerCase()) && itemSim && itemSim.trim()) {
-             simStr = ` "${itemSim.trim()}"`;
+             simStr = ` (${itemSim.trim()})`;
          }
 
          let plural = n;
