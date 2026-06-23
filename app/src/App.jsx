@@ -622,6 +622,9 @@ function App() {
          if (name.trim().toLowerCase() === 'sim card' && itemSim && itemSim.trim()) {
              simStr = ` № ${itemSim.trim()}`;
          }
+         if (['license plate', 'custom license plate'].includes(name.trim().toLowerCase()) && itemSim && itemSim.trim()) {
+             simStr = ` "${itemSim.trim()}"`;
+         }
 
          let plural = n;
          const low = n.toLowerCase();
@@ -1849,10 +1852,10 @@ function App() {
                         <input type="text" className="search-input" placeholder="e.g., 1, 2, Sport" value={otherItem1Type} onChange={(e) => setOtherItem1Type(e.target.value)} />
                       </div>
                     )}
-                    {otherItem1.trim().toLowerCase() === 'sim card' && (
+                    {['sim card', 'license plate', 'custom license plate'].includes(otherItem1.trim().toLowerCase()) && (
                       <div className="form-group" style={{ flex: 1, marginBottom: 0 }}>
-                        <label>SIM Number</label>
-                        <input type="text" className="search-input" placeholder="e.g., 77-77-777" value={otherItem1Sim} onChange={(e) => setOtherItem1Sim(e.target.value)} />
+                        <label>{otherItem1.trim().toLowerCase() === 'sim card' ? 'SIM Number' : 'Plate Number'}</label>
+                        <input type="text" className="search-input" placeholder={otherItem1.trim().toLowerCase() === 'sim card' ? "e.g., 77-77-777" : "e.g., BIGBOSS"} value={otherItem1Sim} onChange={(e) => setOtherItem1Sim(e.target.value)} />
                       </div>
                     )}
                     {clothingItems.map(c => c.toLowerCase()).includes(otherItem1.trim().toLowerCase()) && (
@@ -1931,10 +1934,10 @@ function App() {
                         <input type="text" className="search-input" placeholder="e.g., 1, 2, Sport" value={otherItem2Type} onChange={(e) => setOtherItem2Type(e.target.value)} />
                       </div>
                     )}
-                    {otherItem2.trim().toLowerCase() === 'sim card' && (
+                    {['sim card', 'license plate', 'custom license plate'].includes(otherItem2.trim().toLowerCase()) && (
                       <div className="form-group" style={{ flex: 1, marginBottom: 0 }}>
-                        <label>SIM Number</label>
-                        <input type="text" className="search-input" placeholder="e.g., 77-77-777" value={otherItem2Sim} onChange={(e) => setOtherItem2Sim(e.target.value)} />
+                        <label>{otherItem2.trim().toLowerCase() === 'sim card' ? 'SIM Number' : 'Plate Number'}</label>
+                        <input type="text" className="search-input" placeholder={otherItem2.trim().toLowerCase() === 'sim card' ? "e.g., 77-77-777" : "e.g., BIGBOSS"} value={otherItem2Sim} onChange={(e) => setOtherItem2Sim(e.target.value)} />
                       </div>
                     )}
                     {clothingItems.map(c => c.toLowerCase()).includes(otherItem2.trim().toLowerCase()) && (
@@ -2013,10 +2016,10 @@ function App() {
                         <input type="text" className="search-input" placeholder="e.g., 1, 2, Sport" value={otherItem3Type} onChange={(e) => setOtherItem3Type(e.target.value)} />
                       </div>
                     )}
-                    {otherItem3.trim().toLowerCase() === 'sim card' && (
+                    {['sim card', 'license plate', 'custom license plate'].includes(otherItem3.trim().toLowerCase()) && (
                       <div className="form-group" style={{ flex: 1, marginBottom: 0 }}>
-                        <label>SIM Number</label>
-                        <input type="text" className="search-input" placeholder="e.g., 77-77-777" value={otherItem3Sim} onChange={(e) => setOtherItem3Sim(e.target.value)} />
+                        <label>{otherItem3.trim().toLowerCase() === 'sim card' ? 'SIM Number' : 'Plate Number'}</label>
+                        <input type="text" className="search-input" placeholder={otherItem3.trim().toLowerCase() === 'sim card' ? "e.g., 77-77-777" : "e.g., BIGBOSS"} value={otherItem3Sim} onChange={(e) => setOtherItem3Sim(e.target.value)} />
                       </div>
                     )}
                     {clothingItems.map(c => c.toLowerCase()).includes(otherItem3.trim().toLowerCase()) && (
@@ -2078,7 +2081,7 @@ function App() {
                     </div>
                   )}
                   {formAction !== 'Trade' && ![otherItem1, otherItem2, otherItem3].some(item => clothingItems.map(c => c.toLowerCase()).includes(item.trim().toLowerCase())) && 
-                   ![ { name: otherItem1, sim: otherItem1Sim }, { name: otherItem2, sim: otherItem2Sim }, { name: otherItem3, sim: otherItem3Sim } ].some(item => item.name.trim().toLowerCase() === 'sim card' && item.sim.trim() !== '') && (
+                   ![ { name: otherItem1, sim: otherItem1Sim }, { name: otherItem2, sim: otherItem2Sim }, { name: otherItem3, sim: otherItem3Sim } ].some(item => ['sim card', 'license plate', 'custom license plate'].includes(item.name.trim().toLowerCase()) && item.sim.trim() !== '') && (
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                       <input 
                         type="checkbox" 
