@@ -2101,7 +2101,7 @@ function App() {
                       <label htmlFor="bulkCheck" style={{ marginBottom: 0 }}>Bulk</label>
                     </div>
                   )}
-                  {(![ { name: otherItem1, sim: otherItem1Sim }, { name: otherItem2, sim: otherItem2Sim }, { name: otherItem3, sim: otherItem3Sim } ].some(item => ['sim card', 'license plate', 'custom license plate'].includes(item.name.trim().toLowerCase()) && item.sim.trim() !== '')) && (otherItem2.trim() !== '' || otherItem3.trim() !== '' || (otherQty1.trim() !== '' && otherQty1.trim() !== '1')) && (
+                  {(![ { name: otherItem1, sim: otherItem1Sim }, { name: otherItem2, sim: otherItem2Sim }, { name: otherItem3, sim: otherItem3Sim } ].some(item => ['sim card', 'license plate', 'custom license plate'].includes(item.name.trim().toLowerCase()) && item.sim.trim() !== '')) && (otherItem1.trim() !== '' || otherItem2.trim() !== '' || otherItem3.trim() !== '') && (
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                       <input 
                         type="checkbox" 
