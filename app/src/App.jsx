@@ -621,7 +621,7 @@ function App() {
          let n = name.trim();
          if (!n) return '';
          if (itemColor && itemColor.trim()) n = `${itemColor.trim().toLowerCase()} ${n}`;
-         const validQualityItems = ['engine tuning', 'transmission tuning', 'suspension tuning', 'brakes tuning', 'tires tuning', 'fishing rod'];
+         const validQualityItems = ['engine tuning', 'transmission tuning', 'suspension tuning', 'brakes tuning', 'tires tuning', 'fishing rod', 'tuning part'];
          if (quality && validQualityItems.includes(name.trim().toLowerCase())) n = `${quality.toLowerCase()} quality ${n}`;
 
          let simStr = '';
@@ -645,7 +645,7 @@ function App() {
              'leash', 'prime', 'prime platinum'
          ];
          
-         const isInvariant = invariants.includes(low) || low.includes('fish') || low.includes('scrap metal') || low.includes('top quality metal') || low.includes('tuning');
+         const isInvariant = invariants.includes(low) || low.includes('fish') || low.includes('scrap metal') || low.includes('top quality metal') || (low.includes('tuning') && !low.includes('tuning part'));
 
          if (isInvariant) {
              plural = n;
@@ -1838,7 +1838,7 @@ function App() {
                         onChange={(e) => setOtherItem1(e.target.value)}
                         list={otherItem1.length > 0 ? "otherItemsList1" : ""}
                       />
-                      {['engine tuning', 'transmission tuning', 'suspension tuning', 'brakes tuning', 'tires tuning'].includes(otherItem1.trim().toLowerCase()) && (
+                      {['engine tuning', 'transmission tuning', 'suspension tuning', 'brakes tuning', 'tires tuning', 'tuning part'].includes(otherItem1.trim().toLowerCase()) && (
                          <div className="action-toggles" style={{ marginTop: '0.5rem', flexWrap: 'wrap' }}>
                            {['Low', 'Medium', 'High'].map(q => (
                               <button key={q} className={`action-btn ${otherItem1Quality === q ? 'active' : ''}`} onClick={() => setOtherItem1Quality(q)} style={{ padding: '0.2rem 0.5rem', fontSize: '0.75rem' }}>{q} quality</button>
@@ -1930,7 +1930,7 @@ function App() {
                         onChange={(e) => setOtherItem2(e.target.value)}
                         list={otherItem2.length > 0 ? "otherItemsList2" : ""}
                       />
-                      {['engine tuning', 'transmission tuning', 'suspension tuning', 'brakes tuning', 'tires tuning'].includes(otherItem2.trim().toLowerCase()) && (
+                      {['engine tuning', 'transmission tuning', 'suspension tuning', 'brakes tuning', 'tires tuning', 'tuning part'].includes(otherItem2.trim().toLowerCase()) && (
                          <div className="action-toggles" style={{ marginTop: '0.5rem', flexWrap: 'wrap' }}>
                            {['Low', 'Medium', 'High'].map(q => (
                               <button key={q} className={`action-btn ${otherItem2Quality === q ? 'active' : ''}`} onClick={() => setOtherItem2Quality(q)} style={{ padding: '0.2rem 0.5rem', fontSize: '0.75rem' }}>{q} quality</button>
@@ -2022,7 +2022,7 @@ function App() {
                         onChange={(e) => setOtherItem3(e.target.value)}
                         list={otherItem3.length > 0 ? "otherItemsList3" : ""}
                       />
-                      {['engine tuning', 'transmission tuning', 'suspension tuning', 'brakes tuning', 'tires tuning'].includes(otherItem3.trim().toLowerCase()) && (
+                      {['engine tuning', 'transmission tuning', 'suspension tuning', 'brakes tuning', 'tires tuning', 'tuning part'].includes(otherItem3.trim().toLowerCase()) && (
                          <div className="action-toggles" style={{ marginTop: '0.5rem', flexWrap: 'wrap' }}>
                            {['Low', 'Medium', 'High'].map(q => (
                               <button key={q} className={`action-btn ${otherItem3Quality === q ? 'active' : ''}`} onClick={() => setOtherItem3Quality(q)} style={{ padding: '0.2rem 0.5rem', fontSize: '0.75rem' }}>{q} quality</button>
