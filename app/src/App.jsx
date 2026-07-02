@@ -113,6 +113,9 @@ function App() {
   const [otherItem1Sim, setOtherItem1Sim] = useState('');
   const [otherItem2Sim, setOtherItem2Sim] = useState('');
   const [otherItem3Sim, setOtherItem3Sim] = useState('');
+  const [otherItem1Gender, setOtherItem1Gender] = useState('');
+  const [otherItem2Gender, setOtherItem2Gender] = useState('');
+  const [otherItem3Gender, setOtherItem3Gender] = useState('');
 
   const categories = ['Auto', 'Real Estate', 'Business', 'Work', 'Dating', 'Other'];
 
@@ -610,7 +613,7 @@ function App() {
     }
 
     if (otherType === 'Items') {
-      const formatItem = (qty, name, quality, isBulk, itemType, itemColor, itemSim, itemEach) => {
+      const formatItem = (qty, name, quality, isBulk, itemType, itemColor, itemSim, itemEach, itemGender) => {
          let q = qty.trim();
          if (['sim card', 'license plate', 'custom license plate'].includes(name.trim().toLowerCase()) && itemSim && itemSim.trim()) {
              q = '';
@@ -627,6 +630,10 @@ function App() {
          }
          if (['license plate', 'custom license plate'].includes(name.trim().toLowerCase()) && itemSim && itemSim.trim()) {
              simStr = ` (${itemSim.trim()})`;
+         }
+
+         if (itemGender && itemGender.trim()) {
+             simStr += ` ${itemGender.trim()}`;
          }
 
          let plural = n;
@@ -687,9 +694,9 @@ function App() {
          return `${q} ${plural}${typeSuffix}${simStr}`;
       };
 
-      const item1Str = formatItem(otherQty1, otherItem1, otherItem1Quality, otherBulk, otherItem1Type, otherItem1Color, otherItem1Sim, otherEach);
-      const item2Str = formatItem(otherQty2, otherItem2, otherItem2Quality, otherBulk, otherItem2Type, otherItem2Color, otherItem2Sim, otherEach);
-      const item3Str = formatItem(otherQty3, otherItem3, otherItem3Quality, otherBulk, otherItem3Type, otherItem3Color, otherItem3Sim, otherEach);
+      const item1Str = formatItem(otherQty1, otherItem1, otherItem1Quality, otherBulk, otherItem1Type, otherItem1Color, otherItem1Sim, otherEach, otherItem1Gender);
+      const item2Str = formatItem(otherQty2, otherItem2, otherItem2Quality, otherBulk, otherItem2Type, otherItem2Color, otherItem2Sim, otherEach, otherItem2Gender);
+      const item3Str = formatItem(otherQty3, otherItem3, otherItem3Quality, otherBulk, otherItem3Type, otherItem3Color, otherItem3Sim, otherEach, otherItem3Gender);
 
       const items = [item1Str, item2Str, item3Str].filter(i => i !== '');
       if (items.length === 0) return '';
@@ -950,6 +957,9 @@ function App() {
     setOtherItem1Color('');
     setOtherItem2Color('');
     setOtherItem3Color('');
+    setOtherItem1Gender('');
+    setOtherItem2Gender('');
+    setOtherItem3Gender('');
 
     // Global
     setFormAction('Buy');
@@ -1003,6 +1013,9 @@ function App() {
     setOtherItem1Color('');
     setOtherItem2Color('');
     setOtherItem3Color('');
+    setOtherItem1Gender('');
+    setOtherItem2Gender('');
+    setOtherItem3Gender('');
     
     setOtherType(newType);
   };
@@ -1873,6 +1886,14 @@ function App() {
                           <label>Type</label>
                           <input type="text" className="search-input" placeholder="e.g., 55" value={otherItem1Type} onChange={(e) => setOtherItem1Type(e.target.value)} />
                         </div>
+                        <div className="form-group" style={{ flex: 1, marginBottom: 0 }}>
+                          <label>Gender</label>
+                          <select className="search-input" value={otherItem1Gender} onChange={(e) => setOtherItem1Gender(e.target.value)}>
+                            <option value="">Any</option>
+                            <option value="for men">For Men</option>
+                            <option value="for women">For Women</option>
+                          </select>
+                        </div>
                       </>
                     )}
                     <div className="form-group" style={{ flex: 1, marginBottom: 0 }}>
@@ -1957,6 +1978,14 @@ function App() {
                           <label>Type</label>
                           <input type="text" className="search-input" placeholder="e.g., 55" value={otherItem2Type} onChange={(e) => setOtherItem2Type(e.target.value)} />
                         </div>
+                        <div className="form-group" style={{ flex: 1, marginBottom: 0 }}>
+                          <label>Gender</label>
+                          <select className="search-input" value={otherItem2Gender} onChange={(e) => setOtherItem2Gender(e.target.value)}>
+                            <option value="">Any</option>
+                            <option value="for men">For Men</option>
+                            <option value="for women">For Women</option>
+                          </select>
+                        </div>
                       </>
                     )}
                     <div className="form-group" style={{ flex: 1, marginBottom: 0 }}>
@@ -2040,6 +2069,14 @@ function App() {
                         <div className="form-group" style={{ flex: 1, marginBottom: 0 }}>
                           <label>Type</label>
                           <input type="text" className="search-input" placeholder="e.g., 55" value={otherItem3Type} onChange={(e) => setOtherItem3Type(e.target.value)} />
+                        </div>
+                        <div className="form-group" style={{ flex: 1, marginBottom: 0 }}>
+                          <label>Gender</label>
+                          <select className="search-input" value={otherItem3Gender} onChange={(e) => setOtherItem3Gender(e.target.value)}>
+                            <option value="">Any</option>
+                            <option value="for men">For Men</option>
+                            <option value="for women">For Women</option>
+                          </select>
                         </div>
                       </>
                     )}
