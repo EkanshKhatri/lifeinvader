@@ -861,7 +861,8 @@ function App() {
     otherWeddingNames, otherWeddingTime, otherCarBrand, otherCarName, otherGameType, otherGameBet, otherPrice1, otherPrice2, otherPrice3,
     otherQty1, otherQty2, otherQty3, otherEach, otherRespectively, otherPrice1Unit, otherPrice2Unit, otherPrice3Unit,
     otherItem1Quality, otherItem2Quality, otherItem3Quality, otherItem1Type, otherItem2Type, otherItem3Type,
-    otherItem1Color, otherItem2Color, otherItem3Color, otherItem1Sim, otherItem2Sim, otherItem3Sim
+    otherItem1Color, otherItem2Color, otherItem3Color, otherItem1Sim, otherItem2Sim, otherItem3Sim,
+    otherItem1Gender, otherItem2Gender, otherItem3Gender
   ]);
 
 
